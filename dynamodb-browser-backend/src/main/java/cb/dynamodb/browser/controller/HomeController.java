@@ -1,7 +1,9 @@
 package cb.dynamodb.browser.controller;
 
 import cb.dynamodb.browser.constants.Operators;
+import cb.dynamodb.browser.service.DynamodbService;
 import cb.dynamodb.browser.service.SearchService;
+import com.amazonaws.regions.Regions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/")
@@ -21,6 +24,9 @@ public class HomeController {
 
     @Autowired
     private SearchService searchService;
+
+    @Autowired
+    private DynamodbService dynamodbService;
 
 
     @GetMapping("tables")
@@ -74,4 +80,15 @@ public class HomeController {
         map.put("rangeKey", searchService.getSecondaryIndexRangeKey(table));
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
+    @RequestMapping("regions")
+    public Regions[] getRegions() {
+        return dynamodbService.getRegions();
+    }
+
+    @RequestMapping("awsProfiles")
+    public Set<String> getAwsProfile () {
+        return dynamodbService.getProfilesInCredentials();
+    }
+
 }

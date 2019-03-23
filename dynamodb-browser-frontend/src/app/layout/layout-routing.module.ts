@@ -10,6 +10,7 @@ const routes: Routes = [
             { path: '', redirectTo: 'dashboard', pathMatch: 'prefix' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
             { path: 'tables', loadChildren: './tables/tables.module#TablesModule' },
+            { path: 'settings', loadChildren: './settings/settings.module#SettingsModule'}
         ]
     }
 ];
