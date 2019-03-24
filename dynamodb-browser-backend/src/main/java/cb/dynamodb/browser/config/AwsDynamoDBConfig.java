@@ -56,7 +56,6 @@ public class AwsDynamoDBConfig {
                 .build();
     }
 
-
     @Bean
     public DynamoDB amazonDynamoDB(AmazonDynamoDB amazonDynamoDb) {
         return new DynamoDB(amazonDynamoDb);

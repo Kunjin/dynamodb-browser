@@ -66,6 +66,14 @@ export class SettingsComponent implements OnInit {
     }
 
     onSubmit(): void {
-
+        this.awsService.saveSettings(
+            this.settingsForm.get('awsRegion').value,
+            this.settingsForm.get('awsProfile').value,
+            this.settingsForm.get('isAwsProfileUsed').value,
+            this.settingsForm.get('accessKey').value,
+            this.settingsForm.get('secretKey').value)
+            .subscribe(data => {
+                console.log(data);
+        })
     }
 }

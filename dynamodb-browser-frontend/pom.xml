@@ -54,9 +54,9 @@
               <goal>npm</goal>
             </goals>
 
-            <configuration>
+            <configurationDto>
               <arguments>rebuild node-sass</arguments>
-            </configuration>
+            </configurationDto>
           </execution>-->
           <execution>
             <id>prod</id>

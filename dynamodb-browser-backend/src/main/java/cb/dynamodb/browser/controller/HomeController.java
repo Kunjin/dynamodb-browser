@@ -1,6 +1,8 @@
 package cb.dynamodb.browser.controller;
 
 import cb.dynamodb.browser.constants.Operators;
+import cb.dynamodb.browser.dto.ConfigurationDto;
+import cb.dynamodb.browser.service.ConfigurationsService;
 import cb.dynamodb.browser.service.DynamodbService;
 import cb.dynamodb.browser.service.SearchService;
 import com.amazonaws.regions.Regions;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping(value = "/")
 public class HomeController {
@@ -27,6 +30,9 @@ public class HomeController {
 
     @Autowired
     private DynamodbService dynamodbService;
+
+    @Autowired
+    private ConfigurationsService configurationsService;
 
 
     @GetMapping("tables")
@@ -87,8 +93,18 @@ public class HomeController {
     }
 
     @RequestMapping("awsProfiles")
-    public Set<String> getAwsProfile () {
+    public Set<String> getAwsProfile() {
         return dynamodbService.getProfilesInCredentials();
+    }
+
+    @PostMapping("settings")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<Map<String, String>>  saveConfigurationSettings(@RequestBody ConfigurationDto configurationDto) {
+        configurationsService.updateConfigFile(configurationDto);
+        Map<String, String> map = new HashMap<>();
+        map.put("responseCode", HttpStatus.OK.toString());
+        map.put("message", "successful");
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
 }
