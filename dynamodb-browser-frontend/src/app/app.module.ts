@@ -9,8 +9,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
-import { MatFormFieldModule, MatInputModule, MatSelectModule } from '@angular/material';
 import { AwsService } from './shared/services';
+import { DynamodbBrowserModule } from "./dynamodb-browser.module";
 
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
@@ -27,9 +27,7 @@ export const createTranslateLoader = (http: HttpClient) => {
     imports: [
         CommonModule,
         BrowserModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatInputModule,
+        DynamodbBrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
         TranslateModule.forRoot({
