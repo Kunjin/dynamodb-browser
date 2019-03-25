@@ -27,7 +27,7 @@ public class ConfigurationsService {
             bw.write(System.lineSeparator());
             bw.write(String.format("%s=%s", ConfigurationsEnum.PROFILE.key(), configurationDto.getProfile()));
             bw.write(System.lineSeparator());
-            bw.write(String.format("%s=%s", ConfigurationsEnum.IS_AWS_PROFILE_USED.key(), configurationDto.isAwsProfileUsed()));
+            bw.write(String.format("%s=%s", ConfigurationsEnum.IS_AWS_PROFILE_USED.key(), configurationDto.getIsAwsProfileUsed()));
             bw.write(System.lineSeparator());
             bw.write(String.format("%s=%s", ConfigurationsEnum.ACCESS_KEY.key(), configurationDto.getAccessKey()));
             bw.write(System.lineSeparator());
@@ -43,11 +43,13 @@ public class ConfigurationsService {
     public ConfigurationDto readConfigFile() {
         if (isConfigFileExists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(CONFIG_FILE))) {
-                String line = reader.readLine();
+                String line;
                 Map<String, String> configurationsMap = new HashMap<>();
-                while (line != null) {
-                    String[] split = line.split(SEPARATOR);
-                    configurationsMap.put(split[0], split[1]);
+                while ((line = reader.readLine()) != null) {
+                    String[] configRow = line.split(SEPARATOR);
+                    String property = configRow[0];
+                    String value = configRow.length > 1 ? configRow[1] : "";
+                    configurationsMap.put(property, value);
                 }
 
                 return new ConfigurationDto(

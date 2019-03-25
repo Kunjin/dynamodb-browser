@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping(value = "/")
 public class HomeController {
@@ -98,13 +97,18 @@ public class HomeController {
     }
 
     @PostMapping("settings")
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Map<String, String>>  saveConfigurationSettings(@RequestBody ConfigurationDto configurationDto) {
         configurationsService.updateConfigFile(configurationDto);
         Map<String, String> map = new HashMap<>();
         map.put("responseCode", HttpStatus.OK.toString());
         map.put("message", "successful");
         return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("settings")
+    @ResponseBody
+    public ConfigurationDto loadConfigurationSettings() {
+        return configurationsService.readConfigFile();
     }
 
 }

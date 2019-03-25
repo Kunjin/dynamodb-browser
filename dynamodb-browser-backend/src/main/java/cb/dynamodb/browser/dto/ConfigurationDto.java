@@ -1,16 +1,27 @@
 package cb.dynamodb.browser.dto;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class ConfigurationDto {
 
+    @JsonProperty
     private String region;
+
+    @JsonProperty
     private String profile;
-    private boolean isAwsProfileUsed;
+
+    @JsonProperty
+    private Boolean isAwsProfileUsed;
+
+    @JsonProperty
     private String accessKey;
+
+    @JsonProperty
     private String secretKey;
 
     public ConfigurationDto() {}
 
-    public ConfigurationDto(String region, String profile, boolean isAwsProfileUsed, String accessKey, String secretKey) {
+    public ConfigurationDto(String region, String profile, Boolean isAwsProfileUsed, String accessKey, String secretKey) {
         this.region = region;
         this.profile = profile;
         this.isAwsProfileUsed = isAwsProfileUsed;
@@ -34,11 +45,11 @@ public class ConfigurationDto {
         this.profile = profile;
     }
 
-    public boolean isAwsProfileUsed() {
+    public Boolean getIsAwsProfileUsed() {
         return isAwsProfileUsed;
     }
 
-    public void setAwsProfileUsed(boolean awsProfileUsed) {
+    public void setIsAwsProfileUsed(Boolean awsProfileUsed) {
         isAwsProfileUsed = awsProfileUsed;
     }
 

@@ -24,7 +24,6 @@ export class SettingsComponent implements OnInit {
             isAwsProfileUsed: false,
             accessKey: new FormControl(''),
             secretKey: new FormControl('')
-
         })
     }
 
@@ -44,14 +43,28 @@ export class SettingsComponent implements OnInit {
         this.settingsForm.get('awsRegion').setValue(this.regions);
         this.settingsForm.get('awsProfile').setValue(this.profiles);
 
+        this.loadSettings();
+
         this.settingsForm.get('isAwsProfileUsed').valueChanges.subscribe(checked => {
             if (checked) {
+                this.isChecked = true;
                 this.settingsForm.get('awsProfile').enable();
                 this.enableDisableAccessSecretKey(false);
             } else {
+                this.isChecked = false;
                 this.settingsForm.get('awsProfile').disable();
                 this.enableDisableAccessSecretKey(true);
             }
+        })
+    }
+
+    loadSettings(): void {
+        this.awsService.loadSettings().subscribe(data => {
+            this.settingsForm.get('awsRegion').setValue(data.region);
+            this.settingsForm.get('awsProfile').setValue(data.profile);
+            this.settingsForm.get('isAwsProfileUsed').setValue(data.isAwsProfileUsed);
+            this.settingsForm.get('accessKey').setValue(data.accessKey);
+            this.settingsForm.get('secretKey').setValue(data.secretKey);
         })
     }
 
@@ -69,7 +82,8 @@ export class SettingsComponent implements OnInit {
         this.awsService.saveSettings(
             this.settingsForm.get('awsRegion').value,
             this.settingsForm.get('awsProfile').value,
-            this.settingsForm.get('isAwsProfileUsed').value,
+            //this.settingsForm.get('isAwsProfileUsed').value,
+            this.isChecked,
             this.settingsForm.get('accessKey').value,
             this.settingsForm.get('secretKey').value)
             .subscribe(data => {
