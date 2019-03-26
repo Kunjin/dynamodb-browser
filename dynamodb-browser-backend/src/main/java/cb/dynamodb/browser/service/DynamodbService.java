@@ -2,17 +2,24 @@ package cb.dynamodb.browser.service;
 
 import com.amazonaws.auth.profile.ProfilesConfigFile;
 import com.amazonaws.auth.profile.internal.BasicProfile;
+import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Service
 public class DynamodbService {
 
-    public Regions[] getRegions() {
-        return Regions.values();
+    public List<String> getRegions() {
+        List<String> regionList = new ArrayList<>();
+         for (Regions region : Regions.values()) {
+             regionList.add(region.getName());
+         }
+        return regionList;
     }
 
     public Set<String> getProfilesInCredentials() {

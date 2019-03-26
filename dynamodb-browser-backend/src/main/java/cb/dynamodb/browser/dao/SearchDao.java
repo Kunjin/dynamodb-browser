@@ -1,5 +1,6 @@
 package cb.dynamodb.browser.dao;
 
+import cb.dynamodb.browser.aws.DatabaseConfiguration;
 import cb.dynamodb.browser.constants.Operators;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.document.*;
@@ -22,13 +23,18 @@ import java.util.List;
 @Repository
 public class SearchDao {
     private static final String RANGE = "RANGE";
-    @Autowired
+
     private DynamoDB dynamoDB;
 
-    @Autowired
-    private AmazonDynamoDB amazonDynamoDbClient;
+    private DatabaseConfiguration databaseConfiguration;
+
+//    private AmazonDynamoDB amazonDynamoDbClient;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchDao.class);
+
+    public SearchDao() {
+        this.dynamoDB = new DatabaseConfiguration().amazonDynamoDB();
+    }
 
     public List<String> searchByHashKey(String table, String hashKey, String value, String operator) {
         List<String> results = new ArrayList<>();

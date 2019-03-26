@@ -87,7 +87,7 @@ public class HomeController {
     }
 
     @RequestMapping("regions")
-    public Regions[] getRegions() {
+    public List<String> getRegions() {
         return dynamodbService.getRegions();
     }
 
