@@ -1,7 +1,7 @@
 <div [@routerTransition]>
     <h2>Dynamodb Browser Settings</h2>
 
-    <form [formGroup]="settingsForm" class="settings-form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="connectionForm" class="settings-form" (ngSubmit)="onSubmit()">
         <div>
             <mat-form-field class="settings-full-width">
                 <mat-select placeholder="Region" formControlName="awsRegion">
