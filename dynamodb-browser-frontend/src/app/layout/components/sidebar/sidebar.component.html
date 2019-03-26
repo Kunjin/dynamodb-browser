@@ -16,7 +16,7 @@
 
                 <ul class="submenu" *ngFor="let table of tables">
                     <li>
-                        <a href="javascript:void(0)">
+                        <a routerLink="/dynamodb-tables/{{table}}" [routerLinkActive]="['router-link-active']" class="list-group-item">
                             <i class="fa fa-monument"></i>&nbsp;
                             <span>{{table}}</span>
                         </a>
