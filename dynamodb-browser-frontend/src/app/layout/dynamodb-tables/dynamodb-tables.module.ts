@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCheckboxModule, MatFormFieldModule, MatInputModule, MatSelectModule} from '@angular/material';
+import { MatTableModule} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamodbTablesComponent } from './dynamodb-tables.component';
 import { DynamodbTablesRoutingModule } from './dynamodb-tables-routing.module';
@@ -9,10 +9,7 @@ import { DynamodbTablesRoutingModule } from './dynamodb-tables-routing.module';
     imports: [
         CommonModule,
         DynamodbTablesRoutingModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatCheckboxModule,
+        MatTableModule,
         ReactiveFormsModule,
         FormsModule ],
     declarations: [ DynamodbTablesComponent ]

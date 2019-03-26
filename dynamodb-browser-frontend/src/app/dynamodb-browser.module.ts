@@ -1,4 +1,4 @@
-import { MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule } from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatTableModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
@@ -8,6 +8,7 @@ exports: [
     MatSelectModule,
     MatInputModule,
     MatCheckboxModule,
+    MatTableModule,
     ReactiveFormsModule,
     FormsModule
     ]
