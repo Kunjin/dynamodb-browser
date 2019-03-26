@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { TransactionService } from '../../../shared/services/transaction-service';
 
 @Component({
     selector: 'app-sidebar',
@@ -11,10 +12,11 @@ export class SidebarComponent implements OnInit {
     collapsed: boolean;
     showMenu: string;
     pushRightClass: string;
+    tables: string[] = [];
 
     @Output() collapsedEvent = new EventEmitter<boolean>();
 
-    constructor(public router: Router) {
+    constructor(public router: Router, private transactionService: TransactionService) {
 
         this.router.events.subscribe(val => {
             if (
@@ -32,6 +34,12 @@ export class SidebarComponent implements OnInit {
         this.collapsed = false;
         this.showMenu = '';
         this.pushRightClass = 'push-right';
+
+        this.transactionService.displayTables().subscribe(
+            tables => {
+                this.tables = tables;
+                console.log('tables: ', this.tables);
+            })
     }
 
 

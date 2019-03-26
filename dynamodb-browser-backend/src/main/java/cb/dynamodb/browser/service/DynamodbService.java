@@ -2,7 +2,6 @@ package cb.dynamodb.browser.service;
 
 import com.amazonaws.auth.profile.ProfilesConfigFile;
 import com.amazonaws.auth.profile.internal.BasicProfile;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import org.springframework.stereotype.Service;
 

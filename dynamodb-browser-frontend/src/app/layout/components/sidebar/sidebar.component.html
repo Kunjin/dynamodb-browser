@@ -4,32 +4,21 @@
             <i class="fa fa-fw fa-dashboard"></i>&nbsp;
             <span>{{ 'Connect' | translate }}</span>
         </a>
-        <a [routerLink]="['/tables']" [routerLinkActive]="['router-link-active']" class="list-group-item">
-            <i class="fa fa-fw fa-table"></i> Tables
-        </a>
+        <!--<a [routerLink]="['/dynamodb-tables']" [routerLinkActive]="['router-link-active']" class="list-group-item">-->
+        <!--<i class="fa fa-fw fa-table"></i> Tables-->
+        <!--</a>-->
         <div class="nested-menu">
             <a class="list-group-item" (click)="addExpandClass('pages')">
                 <i class="fa fa-plus"></i>&nbsp;
-                <span>{{ 'Menu' | translate }}</span>
+                <span> Tables</span>
             </a>
             <li class="nested" [class.expand]="showMenu === 'pages'">
-                <ul class="submenu">
+
+                <ul class="submenu" *ngFor="let table of tables">
                     <li>
                         <a href="javascript:void(0)">
                             <i class="fa fa-monument"></i>&nbsp;
-                            <span>{{ 'Submenu' | translate }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)">
-                            <i class="fa fa-monument"></i>&nbsp;
-                            <span>{{ 'Submenu' | translate }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)">
-                            <i class="fa fa-monument"></i>&nbsp;
-                            <span>{{ 'Submenu' | translate }}</span>
+                            <span>{{table}}</span>
                         </a>
                     </li>
                 </ul>
