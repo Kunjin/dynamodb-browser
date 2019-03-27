@@ -15,6 +15,7 @@ export class DynamodbTablesComponent implements OnInit {
 
     columnDefs = [];
     dataSource: MatTableDataSource<any>;
+    data='AAA';
 
     constructor(private transactionsService: TransactionService,
                 private activatedRoute: ActivatedRoute,) {
@@ -30,10 +31,9 @@ export class DynamodbTablesComponent implements OnInit {
                 this.dataSource = records;
                 console.log(records);
                 let recordsArr = [];
+                //TODO: For now.. Look on how to handle this better!!
                 for (let i=0; i < records.length; i++) {
-
-                    // recordsArr.push(records[i]);
-                    recordsArr.push({ mic_code: 'FRAB', record: 'AAA', modified_date:'2019-01-01', isin: 'AU1'})
+                    recordsArr.push(JSON.parse(records[i]));
                 }
                 this.initializeDataTable(recordsArr);
             })

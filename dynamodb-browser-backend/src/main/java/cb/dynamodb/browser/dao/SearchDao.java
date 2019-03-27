@@ -2,6 +2,7 @@ package cb.dynamodb.browser.dao;
 
 import cb.dynamodb.browser.aws.DatabaseConfiguration;
 import cb.dynamodb.browser.constants.Operators;
+import cb.dynamodb.browser.dto.Result;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
@@ -100,7 +101,10 @@ public class SearchDao {
             items = dynamoDBTable.scan(spec);
             iterator = items.iterator();
             while (iterator.hasNext()) {
-                results.add(iterator.next().toJSON());
+                Item next = iterator.next();
+                Result result = new Result();
+                result.setRecord(next);
+                results.add(next.toJSON());
             }
         }  catch (Exception e) {
             LOGGER.error("Unable to query from table {} due to:", table, e);

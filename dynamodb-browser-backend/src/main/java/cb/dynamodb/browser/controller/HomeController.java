@@ -2,10 +2,12 @@ package cb.dynamodb.browser.controller;
 
 import cb.dynamodb.browser.constants.Operators;
 import cb.dynamodb.browser.dto.ConfigurationDto;
+import cb.dynamodb.browser.dto.Result;
 import cb.dynamodb.browser.service.ConfigurationsService;
 import cb.dynamodb.browser.service.DynamodbService;
 import cb.dynamodb.browser.service.SearchService;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.document.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +78,7 @@ public class HomeController {
 
     @RequestMapping("records/{table}")
     public List<String> queryAllByTable(@PathVariable String table) {
+        LOGGER.info("{} ", searchService.queryAllByTable(table));
         return searchService.queryAllByTable(table);
     }
 
