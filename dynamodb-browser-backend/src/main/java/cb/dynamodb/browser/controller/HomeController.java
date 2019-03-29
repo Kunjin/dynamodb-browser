@@ -69,8 +69,8 @@ public class HomeController {
     }
 
     @RequestMapping("operations")
-    public Operators[] getScanOperations() {
-        return Operators.values();
+    public List<String> getScanOperations() {
+        return searchService.getOperations();
     }
 
     @RequestMapping("records/{table}")

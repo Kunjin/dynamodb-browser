@@ -15,6 +15,7 @@ export class DynamodbTablesComponent implements OnInit {
 
     columnDefs = [];
     dataSource: MatTableDataSource<any>;
+    operations = [];
 
     constructor(private transactionsService: TransactionService,
                 private activatedRoute: ActivatedRoute) {
@@ -36,6 +37,10 @@ export class DynamodbTablesComponent implements OnInit {
                 }
                 this.addDataInDataTable(recordsArr);
             })
+        });
+
+        this.transactionsService.getOperations().subscribe(operations => {
+            this.operations = operations;
         });
     }
 

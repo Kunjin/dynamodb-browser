@@ -6,7 +6,7 @@ public enum Operators {
     LESS_THAN_OR_EQUALS("<="),
     GREATER_THAN(">"),
     GREATER_THAN_OR_EQUALS(">="),
-    BEGINS_WITH("begins_with");
+    BEGINS_WITH("begins with");
 
     private String operator;
 

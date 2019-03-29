@@ -6,3 +6,4 @@ export const AWS_PROFILE_URL = REST_ENDPOINT + '/awsProfiles';
 export const SETTINGS_URL = REST_ENDPOINT + '/settings';
 export const TABLES_URL = REST_ENDPOINT + '/tables'
 export const RECORDS_URL = REST_ENDPOINT + '/records';
+export const OPERATIONS_URL = REST_ENDPOINT + '/operations';

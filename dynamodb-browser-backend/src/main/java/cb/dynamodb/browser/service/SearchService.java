@@ -1,6 +1,7 @@
 package cb.dynamodb.browser.service;
 
 import cb.dynamodb.browser.aws.DatabaseConfiguration;
+import cb.dynamodb.browser.constants.Operators;
 import cb.dynamodb.browser.dao.SearchDao;
 import cb.dynamodb.browser.dto.ConfigurationDto;
 import cb.dynamodb.browser.dto.Result;
@@ -11,6 +12,7 @@ import com.amazonaws.services.dynamodbv2.model.TableDescription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -58,6 +60,14 @@ public class SearchService {
 
     public String getSecondaryIndexRangeKey(String table) {
         return searchDao.getSecondaryIndexRangeKey(table);
+    }
+
+    public List<String> getOperations() {
+        List<String> operationsList = new ArrayList<>();
+        for (Operators operator : Operators.values()) {
+            operationsList.add(operator.getOperator());
+        }
+        return operationsList;
     }
 
 }
