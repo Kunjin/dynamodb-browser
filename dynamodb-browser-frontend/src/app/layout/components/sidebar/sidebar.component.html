@@ -7,7 +7,7 @@
         <!--<a [routerLink]="['/dynamodb-tables']" [routerLinkActive]="['router-link-active']" class="list-group-item">-->
         <!--<i class="fa fa-fw fa-table"></i> Tables-->
         <!--</a>-->
-        <div class="nested-menu">
+        <div class="nested-menu" *ngIf="tables.length > 1">
             <a class="list-group-item" (click)="addExpandClass('pages')">
                 <i class="fa fa-plus"></i>&nbsp;
                 <span> Tables</span>

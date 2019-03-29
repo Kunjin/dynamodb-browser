@@ -21,7 +21,7 @@ public class ConfigurationsService {
         return file.exists();
     }
 
-    public void updateConfigFile(ConfigurationDto configurationDto) {
+    public void createUpdateConfigFile(ConfigurationDto configurationDto) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(CONFIG_FILE))) {
             bw.write(String.format("%s=%s", ConfigurationsEnum.REGION.key(), configurationDto.getRegion()));
             bw.write(System.lineSeparator());
@@ -64,7 +64,9 @@ public class ConfigurationsService {
                 LOGGER.error("Encountered exception {}", e);
             }
         }
-        //TODO:
+
+        //assign default value
+        createUpdateConfigFile(new ConfigurationDto("us-west-2", "default", true, "", ""));
         return null;
     }
 }

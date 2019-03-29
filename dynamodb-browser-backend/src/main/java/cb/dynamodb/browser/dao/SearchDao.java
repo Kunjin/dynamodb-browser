@@ -25,21 +25,11 @@ import java.util.List;
 public class SearchDao {
     private static final String RANGE = "RANGE";
 
-    private DynamoDB dynamoDB;
-
-    private DatabaseConfiguration databaseConfiguration;
-
-//    private AmazonDynamoDB amazonDynamoDbClient;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchDao.class);
-
-    public SearchDao() {
-        this.dynamoDB = new DatabaseConfiguration().amazonDynamoDB();
-    }
 
     public List<String> searchByHashKey(String table, String hashKey, String value, String operator) {
         List<String> results = new ArrayList<>();
-        Table dynamoDBTable = dynamoDB.getTable(table);
+        Table dynamoDBTable = getTable(table);
 
         QuerySpec querySpec = new QuerySpec()
                 .withKeyConditionExpression(String.format("%s %s :%s", hashKey, Operators.from(operator), hashKey))
@@ -62,7 +52,7 @@ public class SearchDao {
 
     public List<String> searchByHashKeyAndRangeKey(String table, String hashKey, String hashKeyValue, String operator, String rangeKey, String rangeKeyValue, String operatorRangeKeyValue) {
         List<String> results = new ArrayList<>();
-        Table dynamoDBTable = dynamoDB.getTable(table);
+        Table dynamoDBTable = getTable(table);
 
         QuerySpec querySpec = new QuerySpec()
                 .withKeyConditionExpression(String.format("%s %s :%s and %s %s :%s", hashKey, Operators.from(operator), hashKey, rangeKey, Operators.from(operatorRangeKeyValue), rangeKey))
@@ -91,8 +81,7 @@ public class SearchDao {
     public List<String> searchAllByTable(String table) {
 
         List<String> results = new ArrayList<>();
-        Table dynamoDBTable = dynamoDB.getTable(table);
-
+        Table dynamoDBTable = getTable(table);
         ScanSpec spec = new ScanSpec().withMaxResultSize(20);
 
         ItemCollection<ScanOutcome> items;
@@ -114,7 +103,7 @@ public class SearchDao {
 
     public String getSecondaryIndexRangeKey(String table) {
         String results = "";
-        Table dynamoDBTable = dynamoDB.getTable(table);
+        Table dynamoDBTable = getTable(table);
         TableDescription tableDescription = dynamoDBTable.describe();
 
         List<LocalSecondaryIndexDescription> localSecondaryIndexes = tableDescription.getLocalSecondaryIndexes();
@@ -134,9 +123,14 @@ public class SearchDao {
         return results;
     }
 
+    private Table getTable(String table) {
+        DynamoDB dynamoDB = new DatabaseConfiguration().amazonDynamoDB();
+        return dynamoDB.getTable(table);
+    }
+
     private List<String> searchBySecondaryIndex(String table, String hashKey, String hashKeyValue, String operator, String rangeKey, String rangeKeyValue, String operatorRangeKeyValue) {
         List<String> results = new ArrayList<>();
-        Table dynamoDBTable = dynamoDB.getTable(table);
+        Table dynamoDBTable = getTable(table);
         TableDescription tableDescription = dynamoDBTable.describe();
 
         List<LocalSecondaryIndexDescription> localSecondaryIndexes = tableDescription.getLocalSecondaryIndexes();
