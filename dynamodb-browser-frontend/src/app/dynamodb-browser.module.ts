@@ -4,7 +4,8 @@ import {
     MatSelectModule,
     MatCheckboxModule,
     MatTableModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressBarModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
@@ -17,6 +18,7 @@ exports: [
     MatCheckboxModule,
     MatTableModule,
     MatTooltipModule,
+    MatProgressBarModule,
     ReactiveFormsModule,
     FormsModule
     ]
