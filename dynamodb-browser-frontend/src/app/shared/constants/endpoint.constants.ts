@@ -7,3 +7,5 @@ export const SETTINGS_URL = REST_ENDPOINT + '/settings';
 export const TABLES_URL = REST_ENDPOINT + '/tables'
 export const RECORDS_URL = REST_ENDPOINT + '/records';
 export const OPERATIONS_URL = REST_ENDPOINT + '/operations';
+export const TABLE_DETAILS_URL = REST_ENDPOINT + '/details';
+export const DATA_URL = REST_ENDPOINT + '/data';

@@ -3,30 +3,22 @@ package cb.dynamodb.browser.service;
 import cb.dynamodb.browser.aws.DatabaseConfiguration;
 import cb.dynamodb.browser.constants.Operators;
 import cb.dynamodb.browser.dao.SearchDao;
-import cb.dynamodb.browser.dto.ConfigurationDto;
-import cb.dynamodb.browser.dto.Result;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.TableDescription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SearchService {
 
     @Autowired
     private SearchDao searchDao;
-
-    private DatabaseConfiguration databaseConfiguration;
-
-    //Todo: refactor this
-    public SearchService() {
-        databaseConfiguration = new DatabaseConfiguration();
-    }
 
     public List<String> queryByHashKey(String table, String hashKey, String value, String operator) {
         return searchDao.searchByHashKey(table, hashKey, value, operator);
@@ -36,22 +28,26 @@ public class SearchService {
         return searchDao.searchByHashKeyAndRangeKey(table, hashKey, value, operator, rangeKey, rangeKeyValue, operatorRangeKey);
     }
 
-    public String getHashKey(String table) {
-        TableDescription tableSchema = databaseConfiguration.getAmazonDynamoDbClient().describeTable(table).getTable();
-        return tableSchema.getKeySchema().stream()
-                .filter(x -> x.getKeyType().equals(KeyType.HASH.toString()))
-                .findFirst().get().getAttributeName();
+    public Map<String, String> getHashKey(String table) {
+        TableDescription tableSchema = getAmazonDynamodbClient().describeTable(table).getTable();
+
+        Map<String, String> map = new HashMap<>();
+        map.put("key", getAttributeName(tableSchema, KeyType.HASH));
+        map.put("data_type", getKeyType(tableSchema, KeyType.HASH));
+        return map;
     }
 
     public List<String> getTableNames() {
-        return databaseConfiguration.getAmazonDynamoDbClient().listTables().getTableNames();
+        return getAmazonDynamodbClient().listTables().getTableNames();
     }
 
-    public String getRangeKey(String table) {
-        TableDescription tableSchema = databaseConfiguration.getAmazonDynamoDbClient().describeTable(table).getTable();
-        return tableSchema.getKeySchema().stream()
-                .filter(x -> x.getKeyType().equals(KeyType.RANGE.toString()))
-                .findFirst().get().getAttributeName();
+    public Map<String, String> getRangeKey(String table) {
+        TableDescription tableSchema = getAmazonDynamodbClient().describeTable(table).getTable();
+
+        Map<String, String> map = new HashMap<>();
+        map.put("key", getAttributeName(tableSchema, KeyType.RANGE));
+        map.put("data_type", getKeyType(tableSchema, KeyType.RANGE));
+        return map;
     }
 
     public List<String> queryAllByTable(String table) {
@@ -62,12 +58,34 @@ public class SearchService {
         return searchDao.getSecondaryIndexRangeKey(table);
     }
 
-    public List<String> getOperations() {
-        List<String> operationsList = new ArrayList<>();
-        for (Operators operator : Operators.values()) {
-            operationsList.add(operator.getOperator());
-        }
-        return operationsList;
+    public Operators[] getOperations() {
+//        List<String> operationsList = new ArrayList<>();
+//        for (Operators operator : Operators.values()) {
+//            operationsList.add(operator.getOperator());
+//        }
+//        return operationsList;
+        return Operators.values();
     }
 
+    public DescribeTableResult getTableDetails(String table) {
+        return getAmazonDynamodbClient().describeTable(table);
+    }
+
+
+    private AmazonDynamoDB getAmazonDynamodbClient() {
+        return new DatabaseConfiguration().getAmazonDynamoDbClient();
+    }
+
+
+    private String getAttributeName(TableDescription tableSchema, KeyType hash) {
+        return tableSchema.getKeySchema().stream()
+                .filter(x -> x.getKeyType().equals(hash.toString()))
+                .findFirst().get().getAttributeName();
+    }
+
+    private String getKeyType(TableDescription tableSchema, KeyType hash) {
+        return tableSchema.getKeySchema().stream()
+                .filter(x -> x.getKeyType().equals(hash.toString()))
+                .findFirst().get().getAttributeName();
+    }
 }

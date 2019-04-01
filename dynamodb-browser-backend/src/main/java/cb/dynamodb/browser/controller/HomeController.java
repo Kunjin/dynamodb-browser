@@ -5,6 +5,7 @@ import cb.dynamodb.browser.dto.ConfigurationDto;
 import cb.dynamodb.browser.service.ConfigurationsService;
 import cb.dynamodb.browser.service.DynamodbService;
 import cb.dynamodb.browser.service.SearchService;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +40,13 @@ public class HomeController {
     }
 
     @RequestMapping(value = "hashkey/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> getHashKeyByTableName(@PathVariable String table) {
-        Map<String, String> map = new HashMap<>();
-        map.put("hashKey", searchService.getHashKey(table));
-        return new ResponseEntity<>(map, HttpStatus.OK);
+    public Map<String, String> getHashKeyByTableName(@PathVariable String table) {
+        return searchService.getHashKey(table);
     }
 
     @RequestMapping(value = "rangekey/{table}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> getRangeKeyByTableName(@PathVariable String table) {
-        Map<String, String> map = new HashMap<>();
-        map.put("rangeKey", searchService.getRangeKey(table));
-        return new ResponseEntity<>(map, HttpStatus.OK);
+    public Map<String, String> getRangeKeyByTableName(@PathVariable String table) {
+        return searchService.getRangeKey(table);
     }
 
     @RequestMapping("data/{table}")
@@ -69,7 +66,7 @@ public class HomeController {
     }
 
     @RequestMapping("operations")
-    public List<String> getScanOperations() {
+    public Operators[] getScanOperations() {
         return searchService.getOperations();
     }
 
@@ -109,6 +106,12 @@ public class HomeController {
     @ResponseBody
     public ConfigurationDto loadConfigurationSettings() {
         return configurationsService.readConfigFile();
+    }
+
+    @GetMapping("details/{table}")
+    @ResponseBody
+    public DescribeTableResult getTableDetails(@PathVariable String table) {
+        return searchService.getTableDetails(table);
     }
 
 }

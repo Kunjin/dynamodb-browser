@@ -45,7 +45,7 @@ public class SearchDao {
                 results.add(iterator.next().toJSON());
             }
         }  catch (Exception e) {
-            LOGGER.error("Unable to query from table {} where {} = {} due to: {}", table, hashKey, value, e);
+            LOGGER.error("Unable to query from table {} where {} = {} due to: ", table, hashKey, value, e);
         }
         return results;
     }

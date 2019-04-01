@@ -2,32 +2,60 @@
     <div class="row mt-2">
         <div class="col-4">
             <mat-form-field appearance="outline">
-                <mat-select placeholder="Operation">
-                    <mat-option value="query">Query</mat-option>
+                <mat-select placeholder="option" [(value)]="selected">
                     <mat-option value="scan">Scan</mat-option>
+                    <mat-option value="query">Query</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Input Hash Key</mat-label>
-                <input matInput>
-            </mat-form-field>
+    <div *ngIf="selected === 'query'">
+        <div class="row mt-3">
+            <div class="col-3">
+                <span>Hash Key</span>
+            </div>
+            <div class="col-3">
+                <span> {{keySchema['hash_key']['attribute']}}:{{keySchema['hash_key']['data_type']}} </span>
+            </div>
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-select [(value)]="selectedHashKeyOperation">
+                        <mat-option *ngFor="let operation of operations" [value]="operation">{{operation}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Input Value</mat-label>
+                    <input matInput [(ngModel)]="hashKeyValue">
+                </mat-form-field>
+            </div>
         </div>
-        <div class="col-6">
-            <mat-form-field appearance="outline">
-                <mat-select>
-                    <mat-option *ngFor="let operation of operations" [value]="operation">{{operation}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div class="row mt-3">
+            <div class="col-3">
+                Range Key
+            </div>
+            <div class="col-3">
+                {{keySchema['range_key']['attribute']}}:{{keySchema['range_key']['data_type']}}
+            </div>
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-select [(value)]="selectedRangeKeyOperation">
+                        <mat-option *ngFor="let operation of operations" [value]="operation">{{operation}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Input Value</mat-label>
+                    <input matInput [(ngModel)]="rangeKeyValue">
+                </mat-form-field>
+            </div>
         </div>
-        <div class="col-4">
-            <mat-form-field appearance="outline">
-                <mat-label>Input Value</mat-label>
-                <input matInput>
-            </mat-form-field>
+        <div class="row mt-3">
+            <div class="col-3">
+                <button mat-stroked-button (click)="search()">Search</button>
+            </div>
         </div>
     </div>
     <div *ngIf="dataSource.data.length > 0">

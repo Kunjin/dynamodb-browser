@@ -5,7 +5,8 @@ import {
     MatTooltipModule,
     MatProgressBarModule,
     MatInputModule,
-    MatSelectModule } from '@angular/material';
+    MatSelectModule,
+    MatButtonModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamodbTablesComponent } from './dynamodb-tables.component';
 import { DynamodbTablesRoutingModule } from './dynamodb-tables-routing.module';
@@ -19,6 +20,7 @@ import { DynamodbTablesRoutingModule } from './dynamodb-tables-routing.module';
         MatProgressBarModule,
         MatSelectModule,
         MatInputModule,
+        MatButtonModule,
         ReactiveFormsModule,
         FormsModule ],
     declarations: [ DynamodbTablesComponent ]
