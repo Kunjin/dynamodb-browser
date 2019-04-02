@@ -12,7 +12,7 @@ export class TransactionService {
         return this.http.get(TABLES_URL);
     }
 
-    getRecordsByTables(table: string): Observable<any> {
+    scanTable(table: string): Observable<any> {
         return this.http.get(`${RECORDS_URL}/${table}`);
     }
 
@@ -25,18 +25,18 @@ export class TransactionService {
     }
 
     //TODO: refactor this, maybe get the hashKey or rangeKey in the backend and only accept key's value
-    getRecordByHashKey(table:string, hashKey: string, operator: string, hashValue: string): Observable<any> {
+    queryByHashKey(table:string, hashKey: string, operator: string, hashValue: string): Observable<any> {
         return this.http.get(`${DATA_URL}/${table}?hashKey=${hashKey}&operator=${operator}&hashValue=${hashValue}`);
     }
 
     //TODO: refactor this, maybe get the hashKey or rangeKey in the backend and only accept key's value
-    getRecordByHashKeyRangeKey(table:string,
-                               hashKey: string,
-                               hashKeyOperator: string,
-                               hashValue: string,
-                               rangeKey: string,
-                               rangeKeyOperator: string,
-                               rangeValue: string): Observable<any> {
+    queryByHashKeyRangeKey(table:string,
+                           hashKey: string,
+                           hashKeyOperator: string,
+                           hashValue: string,
+                           rangeKey: string,
+                           rangeKeyOperator: string,
+                           rangeValue: string): Observable<any> {
         return this.http.get(`${DATA_URL}/${table}?hashKey=${hashKey}&operator=${hashKeyOperator}&hashValue=${hashValue}&rangeKey=${rangeKey}&operatorRangeKey=${rangeKeyOperator}&rangeValue=${rangeValue}`);
     }
 

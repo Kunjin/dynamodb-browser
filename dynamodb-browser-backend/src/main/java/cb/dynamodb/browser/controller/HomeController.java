@@ -6,6 +6,7 @@ import cb.dynamodb.browser.service.ConfigurationsService;
 import cb.dynamodb.browser.service.DynamodbService;
 import cb.dynamodb.browser.service.SearchService;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
+import com.amazonaws.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +59,11 @@ public class HomeController {
                                             @RequestParam(required = false) String rangeValue,
                                             @RequestParam(required = false) String operatorRangeKey) {
 
-        if (rangeKey != null && rangeValue != null && operatorRangeKey != null) {
-            return searchService.queryByHashKeyAndRangeKey(table, hashKey, hashValue, operator, rangeKey, rangeValue, operatorRangeKey);
+        if (!StringUtils.isNullOrEmpty(rangeKey) && !StringUtils.isNullOrEmpty(rangeValue) && !StringUtils.isNullOrEmpty(operatorRangeKey)) {
+            return searchService.queryByHashKeyAndRangeKey(table, hashKey, hashValue.trim(), operator, rangeKey, rangeValue.trim(), operatorRangeKey);
         }
 
-        return searchService.queryByHashKey(table, hashKey, hashValue, operator);
+        return searchService.queryByHashKey(table, hashKey, hashValue.trim(), operator);
     }
 
     @RequestMapping("operations")
@@ -71,7 +72,7 @@ public class HomeController {
     }
 
     @RequestMapping("records/{table}")
-    public List<String> queryAllByTable(@PathVariable String table) {
+    public List<String> scanTable(@PathVariable String table) {
         LOGGER.info("{} ", searchService.queryAllByTable(table));
         return searchService.queryAllByTable(table);
     }

@@ -2,14 +2,14 @@
     <div class="row mt-2">
         <div class="col-4">
             <mat-form-field appearance="outline">
-                <mat-select placeholder="option" [(value)]="selected">
+                <mat-select placeholder="option" [(value)]="selectedOption" (selectionChange)="changeOption()">
                     <mat-option value="scan">Scan</mat-option>
                     <mat-option value="query">Query</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
     </div>
-    <div *ngIf="selected === 'query'">
+    <div *ngIf="selectedOption === 'query'">
         <div class="row mt-3">
             <div class="col-3">
                 <span>Hash Key</span>
@@ -27,7 +27,8 @@
             <div class="col-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Input Value</mat-label>
-                    <input matInput [(ngModel)]="hashKeyValue">
+                    <input matInput  #model="ngModel" [(ngModel)]="hashKeyValue" required>
+                    <mat-error>Hash key value is required.</mat-error>
                 </mat-form-field>
             </div>
         </div>
@@ -52,9 +53,9 @@
                 </mat-form-field>
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-3" *ngIf="selectedOption === 'query'">
             <div class="col-3">
-                <button mat-stroked-button (click)="search()">Search</button>
+                <button mat-stroked-button (click)="search()" [disabled]="model.invalid">Search</button>
             </div>
         </div>
     </div>

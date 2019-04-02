@@ -19,11 +19,11 @@ export class DynamodbTablesComponent implements OnInit {
     columnDefs = [];
     dataSource: MatTableDataSource<any>;
     operations = [];
-    selected = 'scan';
+    selectedOption = 'scan';
     tableParam = '';
     keySchema = {};
-    selectedRangeKeyOperation = '';
-    selectedHashKeyOperation = '';
+    selectedRangeKeyOperation = 'EQUALS';
+    selectedHashKeyOperation = 'EQUALS';
     rangeKeyValue = '';
     hashKeyValue = '';
 
@@ -33,21 +33,10 @@ export class DynamodbTablesComponent implements OnInit {
 
     ngOnInit(): void {
         this.activatedRoute.params.subscribe(params => {
-            this.selected = 'scan';
+            this.selectedOption = 'scan';
             this.reinitializeDataTable();
             this.tableParam = params['table'];
-            this.transactionsService.getRecordsByTables(this.tableParam).subscribe(records => {
-                for (let column in JSON.parse(records[0])) {
-                    this.columnDefs.push(column);
-                }
-                this.dataSource = records;
-                let recordsArr = [];
-                //TODO: For now.. Look on how to handle this better!!
-                for (let i = 0; i < records.length; i++) {
-                    recordsArr.push(JSON.parse(records[i]));
-                }
-                this.addDataInDataTable(recordsArr);
-            })
+            this.scanTable();
 
             this.transactionsService.getTableDetails(this.tableParam).subscribe(records => {
                 console.log(`${this.tableParam} details: `, records);
@@ -91,22 +80,13 @@ export class DynamodbTablesComponent implements OnInit {
         });
     }
 
-    private reinitializeDataTable() {
-        this.dataSource = new MatTableDataSource<any>();
-        this.columnDefs = [];
-    }
-
-    private addDataInDataTable(arr: any[]) {
-        this.dataSource = new MatTableDataSource(arr);
-    }
-
     search() {
         console.log(`selected operation: ${this.selectedHashKeyOperation}`);
         console.log(`range key value: ${this.hashKeyValue}`);
 
         //TODO: refactor this
         if (this.rangeKeyValue !== '') {
-            this.transactionsService.getRecordByHashKeyRangeKey(
+            this.transactionsService.queryByHashKeyRangeKey(
                 this.tableParam,
                 //_.get(this.keySchema, 'hash_key'['attribute']),
                 //TODO: refactor use _.get
@@ -125,7 +105,7 @@ export class DynamodbTablesComponent implements OnInit {
                 this.addDataInDataTable(recordsArr);
             })
         } else {
-            this.transactionsService.getRecordByHashKey(
+            this.transactionsService.queryByHashKey(
                 this.tableParam,
                 //_.get(this.keySchema, 'hash_key'['attribute']),
                 //TODO: refactor use _.get
@@ -141,5 +121,36 @@ export class DynamodbTablesComponent implements OnInit {
                 this.addDataInDataTable(recordsArr);
             })
         }
+    }
+
+    changeOption() {
+       if ('scan' === this.selectedOption) {
+           this.reinitializeDataTable();
+           this.scanTable();
+       }
+    }
+
+    private scanTable() {
+        this.transactionsService.scanTable(this.tableParam).subscribe(records => {
+            for (let column in JSON.parse(records[0])) {
+                this.columnDefs.push(column);
+            }
+            this.dataSource = records;
+            let recordsArr = [];
+            //TODO: For now.. Look on how to handle this better!!
+            for (let i = 0; i < records.length; i++) {
+                recordsArr.push(JSON.parse(records[i]));
+            }
+            this.addDataInDataTable(recordsArr);
+        })
+    }
+
+    private reinitializeDataTable() {
+        this.dataSource = new MatTableDataSource<any>();
+        this.columnDefs = [];
+    }
+
+    private addDataInDataTable(arr: any[]) {
+        this.dataSource = new MatTableDataSource(arr);
     }
 }
