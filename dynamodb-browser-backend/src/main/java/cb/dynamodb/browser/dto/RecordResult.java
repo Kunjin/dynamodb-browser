@@ -3,7 +3,7 @@ package cb.dynamodb.browser.dto;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
-public class Result {
+public class RecordResult {
 
     @JsonRawValue
     private Item record;

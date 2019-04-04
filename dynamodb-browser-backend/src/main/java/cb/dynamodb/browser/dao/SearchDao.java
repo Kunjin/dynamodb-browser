@@ -4,20 +4,21 @@ import cb.dynamodb.browser.aws.DatabaseConfiguration;
 import cb.dynamodb.browser.constants.Operators;
 import cb.dynamodb.browser.dto.ExclusiveKeys;
 import cb.dynamodb.browser.dto.KeysAttribute;
-import cb.dynamodb.browser.dto.Result;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import cb.dynamodb.browser.dto.RecordResult;
+import cb.dynamodb.browser.dto.ScanResults;
 import com.amazonaws.services.dynamodbv2.document.*;
-import com.amazonaws.services.dynamodbv2.document.internal.PageIterable;
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class SearchDao {
@@ -76,13 +77,12 @@ public class SearchDao {
         return results;
     }
 
-    public List<String> searchAllByTable(String table, KeysAttribute keysAttribute, ExclusiveKeys exclusiveKeys) {
+    public ScanResults searchAllByTable(String table, KeysAttribute keysAttribute, ExclusiveKeys exclusiveKeys) {
 
-        List<String> results = new ArrayList<>();
         Table dynamoDBTable = getTable(table);
         ScanSpec spec;
 
-        if (exclusiveKeys == null) {
+        if (exclusiveKeys.getHashKeyName() == null || exclusiveKeys.getRangeKeyName() == null) {
             spec = new ScanSpec().withMaxPageSize(2).withMaxResultSize(2);
         } else {
             spec = new ScanSpec().withMaxPageSize(2)
@@ -94,12 +94,12 @@ public class SearchDao {
                     .withMaxResultSize(2); }
 
         ItemCollection<ScanOutcome> items;
+        ScanResults scanResults = new ScanResults();
+        List<String> results = new ArrayList<>();
         try {
             items = dynamoDBTable.scan(spec);
-            int pageNum = 0;
-            for (Page<Item, ScanOutcome> page : items.pages()) {
 
-                System.out.println("\nPage: " + ++pageNum);
+            for (Page<Item, ScanOutcome> page : items.pages()) {
 
                 // Process each item on the current page
                 Iterator<Item> item = page.iterator();
@@ -110,34 +110,31 @@ public class SearchDao {
 
                     if (key.getKey().equals(keysAttribute.getHashKey())) {
                         keys.setHashKeyName(key.getKey());
-                        String keyAttribute = key.getValue().toString().split(":")[1].replaceAll(",", "").trim();
+                        String keyAttribute = key.getValue().toString().split(":")[1].replaceAll(",}", "")
+                                .replaceAll("}", "").trim();
                         keys.setHashKeyValue(keyAttribute);
                     } else {
                         keys.setRangeKeyName(key.getKey());
-                        String keyAttribute = key.getValue().toString().split(":")[1].replaceAll(",", "").trim();
+                        String keyAttribute = key.getValue().toString().split(":")[1].replaceAll(",}", "")
+                                .replaceAll("}", "").trim();
                         keys.setRangeKeyValue(keyAttribute);
                     }
                 }
-                System.out.println(keys);
+                scanResults.setExclusiveKeys(keys);
                 while (item.hasNext()) {
                     Item next = item.next();
-                    Result result = new Result();
-                    result.setRecord(next);
+                    RecordResult recordResult = new RecordResult();
+                    recordResult.setRecord(next);
                     results.add(next.toJSON());
                 }
 
             }
-//            iterator = items.iterator();
-//            while (iterator.hasNext()) {
-//                Item next = iterator.next();
-//                Result result = new Result();
-//                result.setRecord(next);
-//                results.add(next.toJSON());
-//            }
         }  catch (Exception e) {
             LOGGER.error("Unable to query from table {} due to:", table, e);
         }
-        return results;
+
+        scanResults.setRecords(results);
+        return scanResults;
     }
 
     public String getSecondaryIndexRangeKey(String table) {

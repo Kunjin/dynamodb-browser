@@ -1,9 +1,19 @@
 package cb.dynamodb.browser.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ExclusiveKeys {
+
+    @JsonProperty
     private String hashKeyName;
+
+    @JsonProperty
     private Object hashKeyValue;
+
+    @JsonProperty
     private String rangeKeyName;
+
+    @JsonProperty
     private Object rangeKeyValue;
 
     public ExclusiveKeys() { }

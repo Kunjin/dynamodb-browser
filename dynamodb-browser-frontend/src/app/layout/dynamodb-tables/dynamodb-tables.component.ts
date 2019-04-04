@@ -26,6 +26,7 @@ export class DynamodbTablesComponent implements OnInit {
     selectedHashKeyOperation = 'EQUALS';
     rangeKeyValue = '';
     hashKeyValue = '';
+    exclusiveKeys = {};
 
     constructor(private transactionsService: TransactionService,
                 private activatedRoute: ActivatedRoute) {
@@ -130,12 +131,19 @@ export class DynamodbTablesComponent implements OnInit {
        }
     }
 
-    private scanTable() {
-        this.transactionsService.scanTable(this.tableParam).subscribe(records => {
+    next() {
+        this.reinitializeDataTable();
+        this.scanTable(this.exclusiveKeys);
+    }
+
+    private scanTable(exclusiveKeys ?: object) {
+        this.transactionsService.scanTable(this.tableParam, exclusiveKeys).subscribe(results => {
+            let records = _.get(results, "records");
+            this.exclusiveKeys = _.get(results, 'exclusiveKeys', null);
             for (let column in JSON.parse(records[0])) {
                 this.columnDefs.push(column);
             }
-            this.dataSource = records;
+            this.dataSource = results;
             let recordsArr = [];
             //TODO: For now.. Look on how to handle this better!!
             for (let i = 0; i < records.length; i++) {

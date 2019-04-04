@@ -69,6 +69,12 @@
             <tr mat-row *matRowDef="let row; columns: columnDefs;"></tr>
         </table>
     </div>
+
+    <div *ngIf="dataSource.data.length > 0">
+        <i class="material-icons" (click)="next()">
+            navigate_next
+        </i>
+    </div>
     <div *ngIf="dataSource.data.length == 0">
         <mat-progress-bar mode="query"></mat-progress-bar>
     </div>
