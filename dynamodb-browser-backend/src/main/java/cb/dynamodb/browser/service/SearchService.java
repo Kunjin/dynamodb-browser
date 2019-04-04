@@ -3,6 +3,8 @@ package cb.dynamodb.browser.service;
 import cb.dynamodb.browser.aws.DatabaseConfiguration;
 import cb.dynamodb.browser.constants.Operators;
 import cb.dynamodb.browser.dao.SearchDao;
+import cb.dynamodb.browser.dto.ExclusiveKeys;
+import cb.dynamodb.browser.dto.KeysAttribute;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
@@ -51,7 +53,13 @@ public class SearchService {
     }
 
     public List<String> queryAllByTable(String table) {
-        return searchDao.searchAllByTable(table);
+     //   ExclusiveKeys exclusiveKeys = new ExclusiveKeys("isin", "aaa", "mic_code", "FRAB01-01-2001");
+        Map<String, String> hashKeyMap = getHashKey(table);
+        Map<String, String> rangeKey = getRangeKey(table);
+
+        KeysAttribute keysAttribute = new KeysAttribute(hashKeyMap.get("key"), rangeKey.get("key"));
+
+        return searchDao.searchAllByTable(table, keysAttribute, null);
     }
 
     public String getSecondaryIndexRangeKey(String table) {
