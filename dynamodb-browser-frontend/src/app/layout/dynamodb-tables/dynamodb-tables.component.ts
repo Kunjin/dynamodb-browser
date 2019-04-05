@@ -128,6 +128,8 @@ export class DynamodbTablesComponent implements OnInit {
        if ('scan' === this.selectedOption) {
            this.reinitializeDataTable();
            this.scanTable();
+       } else {
+           this.exclusiveKeys = {};
        }
     }
 
@@ -140,16 +142,19 @@ export class DynamodbTablesComponent implements OnInit {
         this.transactionsService.scanTable(this.tableParam, exclusiveKeys).subscribe(results => {
             let records = _.get(results, "records");
             this.exclusiveKeys = _.get(results, 'exclusiveKeys', null);
-            for (let column in JSON.parse(records[0])) {
-                this.columnDefs.push(column);
+
+            if (records.length > 0) {
+                for (let column in JSON.parse(records[0])) {
+                    this.columnDefs.push(column);
+                }
+                this.dataSource = results;
+                let recordsArr = [];
+                //TODO: For now.. Look on how to handle this better!!
+                for (let i = 0; i < records.length; i++) {
+                    recordsArr.push(JSON.parse(records[i]));
+                }
+                this.addDataInDataTable(recordsArr);
             }
-            this.dataSource = results;
-            let recordsArr = [];
-            //TODO: For now.. Look on how to handle this better!!
-            for (let i = 0; i < records.length; i++) {
-                recordsArr.push(JSON.parse(records[i]));
-            }
-            this.addDataInDataTable(recordsArr);
         })
     }
 

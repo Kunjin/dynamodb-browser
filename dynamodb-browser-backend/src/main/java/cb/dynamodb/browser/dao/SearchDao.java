@@ -106,18 +106,21 @@ public class SearchDao {
                 Map<String, AttributeValue> lastEvaluatedKeyMap = page.getLowLevelResult().getScanResult().getLastEvaluatedKey();
 
                 ExclusiveKeys keys = new ExclusiveKeys();
-                for (Map.Entry<String, AttributeValue> key : lastEvaluatedKeyMap.entrySet()) {
 
-                    if (key.getKey().equals(keysAttribute.getHashKey())) {
-                        keys.setHashKeyName(key.getKey());
-                        String keyAttribute = key.getValue().toString().split(":")[1].replaceAll(",}", "")
-                                .replaceAll("}", "").trim();
-                        keys.setHashKeyValue(keyAttribute);
-                    } else {
-                        keys.setRangeKeyName(key.getKey());
-                        String keyAttribute = key.getValue().toString().split(":")[1].replaceAll(",}", "")
-                                .replaceAll("}", "").trim();
-                        keys.setRangeKeyValue(keyAttribute);
+                if (lastEvaluatedKeyMap != null) {
+                    for (Map.Entry<String, AttributeValue> key : lastEvaluatedKeyMap.entrySet()) {
+
+                        if (key.getKey().equals(keysAttribute.getHashKey())) {
+                            keys.setHashKeyName(key.getKey());
+                            String keyAttribute = key.getValue().toString().split(":")[1].replaceAll(",}", "")
+                                    .replaceAll("}", "").trim();
+                            keys.setHashKeyValue(keyAttribute);
+                        } else {
+                            keys.setRangeKeyName(key.getKey());
+                            String keyAttribute = key.getValue().toString().split(":")[1].replaceAll(",}", "")
+                                    .replaceAll("}", "").trim();
+                            keys.setRangeKeyValue(keyAttribute);
+                        }
                     }
                 }
                 scanResults.setExclusiveKeys(keys);

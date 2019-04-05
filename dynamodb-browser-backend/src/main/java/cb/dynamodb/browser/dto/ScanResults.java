@@ -28,4 +28,12 @@ public class ScanResults {
     public void setRecords(List<String> records) {
         this.records = records;
     }
+
+    @Override
+    public String toString() {
+        return "ScanResults{" +
+                "exclusiveKeys=" + exclusiveKeys +
+                ", records=" + records +
+                '}';
+    }
 }

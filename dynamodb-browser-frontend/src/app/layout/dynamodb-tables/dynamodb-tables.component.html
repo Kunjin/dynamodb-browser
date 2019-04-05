@@ -70,10 +70,8 @@
         </table>
     </div>
 
-    <div *ngIf="dataSource.data.length > 0">
-        <i class="material-icons" (click)="next()">
-            navigate_next
-        </i>
+    <div *ngIf="dataSource.data.length > 0 && (exclusiveKeys['hashKeyName'] !== undefined && exclusiveKeys['hashKeyName'] !== null)">
+        <button mat-stroked-button (click)="next()">Next</button>
     </div>
     <div *ngIf="dataSource.data.length == 0">
         <mat-progress-bar mode="query"></mat-progress-bar>
