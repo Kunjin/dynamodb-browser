@@ -2,7 +2,7 @@
     <div class="row mt-2">
         <div class="col-4">
             <mat-form-field appearance="outline">
-                <mat-select placeholder="option" [(value)]="selectedOption" (selectionChange)="changeOption()">
+                <mat-select placeholder="option" [(value)]="selectedOption" (selectionChange)="changeOption()" disableOptionCentering>
                     <mat-option value="scan">Scan</mat-option>
                     <mat-option value="query">Query</mat-option>
                 </mat-select>
@@ -19,7 +19,7 @@
             </div>
             <div class="col-3">
                 <mat-form-field appearance="outline">
-                    <mat-select [(value)]="selectedHashKeyOperation">
+                    <mat-select [(value)]="selectedHashKeyOperation" disableOptionCentering>
                         <mat-option *ngFor="let operation of operations" [value]="operation">{{operation}}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -41,7 +41,7 @@
             </div>
             <div class="col-3">
                 <mat-form-field appearance="outline">
-                    <mat-select [(value)]="selectedRangeKeyOperation">
+                    <mat-select [(value)]="selectedRangeKeyOperation" disableOptionCentering>
                         <mat-option *ngFor="let operation of operations" [value]="operation">{{operation}}</mat-option>
                     </mat-select>
                 </mat-form-field>

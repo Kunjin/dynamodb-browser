@@ -4,14 +4,14 @@
     <form [formGroup]="connectionForm" class="settings-form" (ngSubmit)="onSubmit()">
         <div>
             <mat-form-field class="settings-full-width">
-                <mat-select placeholder="Region" formControlName="awsRegion">
+                <mat-select placeholder="Region" formControlName="awsRegion" disableOptionCentering>
                     <mat-option *ngFor="let region of regions" [value]="region">{{region}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
         <div>
             <mat-form-field class="settings-full-width">
-                <mat-select placeholder="Profile" formControlName="awsProfile">
+                <mat-select placeholder="Profile" formControlName="awsProfile" disableOptionCentering>
                     <mat-option *ngFor="let profile of profiles" [value]="profile"> {{profile}}</mat-option>
                 </mat-select>
             </mat-form-field>
