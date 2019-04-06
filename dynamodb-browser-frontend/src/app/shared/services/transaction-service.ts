@@ -1,16 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RECORDS_URL, TABLES_URL, OPERATIONS_URL, TABLE_DETAILS_URL, DATA_URL } from '../constants';
 import _ from 'lodash';
 
 @Injectable()
 export class TransactionService {
+    private subject = new Subject<any>();
+
     constructor(private http: HttpClient) {
     }
 
     displayTables() : Observable<any> {
         return this.http.get(TABLES_URL);
+    }
+
+    getTablesCount() : Observable<any> {
+        return this.subject.asObservable();
+    }
+
+    setTablesCount(data: any) {
+        this.subject.next({ data: data });
+        console.log('subject: n ', this.subject);
     }
 
     scanTable(table: string, exclusiveKeys ?: object): Observable<any> {

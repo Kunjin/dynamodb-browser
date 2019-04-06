@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
-import { AwsService } from '../../shared/services';
+import { AwsService, TransactionService } from '../../shared/services';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { ToastrManager } from 'ng6-toastr-notifications';
 
@@ -19,7 +19,8 @@ export class ConnectionComponent implements OnInit {
 
     constructor(private awsService: AwsService,
                 private fb: FormBuilder,
-                public toastr: ToastrManager) {
+                public toastr: ToastrManager,
+                private transactionService: TransactionService) {
         this.connectionForm = fb.group({
             awsRegion: new FormControl(''),
             awsProfile: new FormControl({value: '', disabled: true}),
@@ -91,6 +92,11 @@ export class ConnectionComponent implements OnInit {
             .subscribe(data => {
                 console.log(data);
                 this.showSuccessToast();
+                this.transactionService.displayTables().subscribe(
+                    tables => {
+                        console.log('tables: ', tables);
+                        this.transactionService.setTablesCount(tables.length);
+                    })
             }, err => {
                 console.log("Connection failed to saved due to ", err);
                 this.showFailedToast();

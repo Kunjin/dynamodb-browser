@@ -35,13 +35,25 @@ export class SidebarComponent implements OnInit {
         this.showMenu = '';
         this.pushRightClass = 'push-right';
 
+        this.transactionService.getTablesCount().subscribe(
+            count => {
+                console.log('table count: ', count);
+                this.displayTables();
+            });
+
+        // initializiation
+        this.displayTables();
+
+    }
+
+
+    private displayTables() {
         this.transactionService.displayTables().subscribe(
             tables => {
                 this.tables = tables;
                 console.log('tables: ', this.tables);
-            })
+            });
     }
-
 
     addExpandClass(element: any) {
         if (element === this.showMenu) {
