@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
 import { AwsService, TransactionService } from './shared/services';
 import { DynamodbBrowserModule } from "./dynamodb-browser.module";
+import { ToastrModule } from 'ng6-toastr-notifications';
 
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
@@ -30,6 +31,7 @@ export const createTranslateLoader = (http: HttpClient) => {
         DynamodbBrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
+        ToastrModule.forRoot(),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

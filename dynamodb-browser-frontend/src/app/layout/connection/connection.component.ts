@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { AwsService } from '../../shared/services';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
-
+import { ToastrManager } from 'ng6-toastr-notifications';
 
 @Component({
     selector: 'connection-selector',
@@ -15,9 +15,11 @@ export class ConnectionComponent implements OnInit {
     connectionForm: FormGroup;
     regions: String[] = [];
     profiles: String[] = [];
-    isChecked = false;
+    isUseAwsProfileChecked = false;
 
-    constructor(private awsService: AwsService, private fb: FormBuilder) {
+    constructor(private awsService: AwsService,
+                private fb: FormBuilder,
+                public toastr: ToastrManager) {
         this.connectionForm = fb.group({
             awsRegion: new FormControl(''),
             awsProfile: new FormControl({value: '', disabled: true}),
@@ -47,11 +49,11 @@ export class ConnectionComponent implements OnInit {
 
         this.connectionForm.get('isAwsProfileUsed').valueChanges.subscribe(checked => {
             if (checked) {
-                this.isChecked = true;
+                this.isUseAwsProfileChecked = true;
                 this.connectionForm.get('awsProfile').enable();
                 this.enableDisableAccessSecretKey(false);
             } else {
-                this.isChecked = false;
+                this.isUseAwsProfileChecked = false;
                 this.connectionForm.get('awsProfile').disable();
                 this.enableDisableAccessSecretKey(true);
             }
@@ -83,11 +85,31 @@ export class ConnectionComponent implements OnInit {
             this.connectionForm.get('awsRegion').value,
             this.connectionForm.get('awsProfile').value,
             //this.connectionForm.get('isAwsProfileUsed').value,
-            this.isChecked,
+            this.isUseAwsProfileChecked,
             this.connectionForm.get('accessKey').value,
             this.connectionForm.get('secretKey').value)
             .subscribe(data => {
                 console.log(data);
-        })
+                this.showSuccessToast();
+            }, err => {
+                console.log("Connection failed to saved due to ", err);
+                this.showFailedToast();
+            });
+    }
+
+    showSuccessToast() {
+        let message = 'Connection successfully saved.';
+        this.toastr.successToastr('', message, {
+            position: 'bottom-full-width',
+            animate: 'slideFromBottom'
+        });
+    }
+
+    showFailedToast() {
+        let message = 'Connection was not successfully saved.';
+        this.toastr.errorToastr('', message, {
+            position: 'bottom-full-width',
+            animate: 'slideFromBottom'
+        });
     }
 }

@@ -19,15 +19,16 @@
         <div>
             <mat-checkbox formControlName="isAwsProfileUsed"> Use AWS Profile?</mat-checkbox>
         </div>
-        <div *ngIf="!isChecked">
+        <div *ngIf="!isUseAwsProfileChecked">
             <div>
                 <mat-form-field>
-                    <input matInput placeholder="Access Key" formControlName="accessKey">
+                    <input matInput placeholder="Access Key" formControlName="accessKey" required>
                 </mat-form-field>
             </div>
             <div>
                 <mat-form-field>
-                    <input matInput placeholder="Secret Key" formControlName="secretKey">
+                    <input matInput placeholder="Secret Key" formControlName="secretKey" required>
+                    <mat-error *ngIf="connectionForm.get('secretKey')?.hasError('required')">Secret Key is required.</mat-error>
                 </mat-form-field>
             </div>
         </div>
