@@ -83,15 +83,15 @@ public class SearchDao {
         ScanSpec spec;
 
         if (exclusiveKeys.getHashKeyName() == null || exclusiveKeys.getRangeKeyName() == null) {
-            spec = new ScanSpec().withMaxPageSize(2).withMaxResultSize(2);
+            spec = new ScanSpec().withMaxPageSize(100).withMaxResultSize(100);
         } else {
-            spec = new ScanSpec().withMaxPageSize(2)
+            spec = new ScanSpec().withMaxPageSize(100)
                     .withExclusiveStartKey(
                             exclusiveKeys.getHashKeyName(),
                             exclusiveKeys.getHashKeyValue(),
                             exclusiveKeys.getRangeKeyName(),
                             exclusiveKeys.getRangeKeyValue())
-                    .withMaxResultSize(2); }
+                    .withMaxResultSize(100); }
 
         ItemCollection<ScanOutcome> items;
         ScanResults scanResults = new ScanResults();
