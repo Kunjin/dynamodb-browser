@@ -10,6 +10,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.TableDescription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +56,7 @@ public class SearchService {
     }
 
     public ScanResults queryAllByTable(String table, ExclusiveKeys exclusiveKeys) {
-     //   ExclusiveKeys exclusiveKeys = new ExclusiveKeys("isin", "aaa", "mic_code", "FRAB01-01-2001");
+        //   ExclusiveKeys exclusiveKeys = new ExclusiveKeys("isin", "aaa", "mic_code", "FRAB01-01-2001");
         Map<String, String> hashKeyMap = getHashKey(table);
         Map<String, String> rangeKey = getRangeKey(table);
 

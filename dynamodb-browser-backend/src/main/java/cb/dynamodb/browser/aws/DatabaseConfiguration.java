@@ -2,6 +2,9 @@ package cb.dynamodb.browser.aws;
 
 import cb.dynamodb.browser.dto.ConfigurationDto;
 import cb.dynamodb.browser.service.ConfigurationsService;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -18,10 +21,19 @@ public class DatabaseConfiguration {
     public AmazonDynamoDB getAmazonDynamoDbClient() {
         ConfigurationsService configurationsService = new ConfigurationsService();
         ConfigurationDto configurationDto = configurationsService.readConfigFile();
-        return AmazonDynamoDBClientBuilder.standard()
-                .withRegion(Regions.fromName(configurationDto.getRegion()))
-                .withCredentials(profileCredentialsProvider(configurationDto.getProfile()))
-                .build();
+
+        try {
+            if (configurationDto.getIsAwsProfileUsed()) {
+                return buildAwsDbClient(profileCredentialsProvider(configurationDto.getProfile()), configurationDto.getRegion());
+            }
+
+            BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(configurationDto.getAccessKey(), configurationDto.getSecretKey());
+            return buildAwsDbClient(new AWSStaticCredentialsProvider(basicAWSCredentials), configurationDto.getRegion());
+        } catch (Exception e) {
+            LOGGER.info("Failed to connect in AWS Dynamodb {}", e);
+        }
+
+        return null;
     }
 
     public ProfileCredentialsProvider profileCredentialsProvider(String awsProfile) {
@@ -35,5 +47,12 @@ public class DatabaseConfiguration {
 
     public DynamoDB amazonDynamoDB() {
         return new DynamoDB(getAmazonDynamoDbClient());
+    }
+
+    private AmazonDynamoDB buildAwsDbClient(AWSCredentialsProvider awsCredentialsProvider, String region) {
+        return  AmazonDynamoDBClientBuilder.standard()
+                .withRegion(Regions.fromName(region))
+                .withCredentials(awsCredentialsProvider)
+                .build();
     }
 }

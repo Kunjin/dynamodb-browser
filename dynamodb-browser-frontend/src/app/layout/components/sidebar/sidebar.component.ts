@@ -1,6 +1,8 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { TransactionService } from '../../../shared/services/transaction-service';
+import { ToastrManager } from 'ng6-toastr-notifications';
+import _ from 'lodash';
 
 @Component({
     selector: 'app-sidebar',
@@ -16,7 +18,9 @@ export class SidebarComponent implements OnInit {
 
     @Output() collapsedEvent = new EventEmitter<boolean>();
 
-    constructor(public router: Router, private transactionService: TransactionService) {
+    constructor(public router: Router,
+                private transactionService: TransactionService,
+                public toastr: ToastrManager) {
 
         this.router.events.subscribe(val => {
             if (
@@ -41,7 +45,7 @@ export class SidebarComponent implements OnInit {
                 this.displayTables();
             });
 
-        // initializiation
+        // initialization
         this.displayTables();
 
     }
@@ -52,6 +56,8 @@ export class SidebarComponent implements OnInit {
             tables => {
                 this.tables = tables;
                 console.log('tables: ', this.tables);
+            }, err => {
+                this.showFailedToast(_.get(err, 'error.message'));
             });
     }
 
@@ -76,6 +82,13 @@ export class SidebarComponent implements OnInit {
     toggleSidebar() {
         const dom: any = document.querySelector('body');
         dom.classList.toggle(this.pushRightClass);
+    }
+
+    private showFailedToast(message: string) {
+        this.toastr.errorToastr('', message, {
+            position: 'bottom-full-width',
+            animate: 'slideFromBottom'
+        });
     }
 
 }

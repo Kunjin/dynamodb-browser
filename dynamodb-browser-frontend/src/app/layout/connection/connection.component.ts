@@ -3,6 +3,7 @@ import { routerTransition } from '../../router.animations';
 import { AwsService, TransactionService } from '../../shared/services';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { ToastrManager } from 'ng6-toastr-notifications';
+import _ from 'lodash';
 
 @Component({
     selector: 'connection-selector',
@@ -96,10 +97,12 @@ export class ConnectionComponent implements OnInit {
                     tables => {
                         console.log('tables: ', tables);
                         this.transactionService.setTablesCount(tables.length);
+                    }, err => {
+                        this.showFailedToast(_.get(err, 'error.message'));
                     })
             }, err => {
                 console.log("Connection failed to saved due to ", err);
-                this.showFailedToast();
+                this.showFailedToast("Connection was not successfully saved.");
             });
     }
 
@@ -111,8 +114,7 @@ export class ConnectionComponent implements OnInit {
         });
     }
 
-    showFailedToast() {
-        let message = 'Connection was not successfully saved.';
+    showFailedToast(message: string) {
         this.toastr.errorToastr('', message, {
             position: 'bottom-full-width',
             animate: 'slideFromBottom'
