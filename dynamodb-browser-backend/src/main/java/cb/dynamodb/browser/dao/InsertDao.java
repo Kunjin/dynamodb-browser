@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
 public class InsertDao {
@@ -27,8 +26,8 @@ public class InsertDao {
 
         Item item = new Item();
         Map<String, AttributeDto> primaryKeyAttributesMap = new HashMap<>();
-        AttributeDto hashKeyAttribute = getPrimaryKetAttribute(itemDto, "hash_key");
-        AttributeDto rangeKeyAttribute = getPrimaryKetAttribute(itemDto, "range_key");
+        AttributeDto hashKeyAttribute = getPrimaryKeyAttribute(itemDto, "hash_key");
+        AttributeDto rangeKeyAttribute = getPrimaryKeyAttribute(itemDto, "range_key");
 
         buildPrimaryKeys(item, primaryKeyAttributesMap, hashKeyAttribute, rangeKeyAttribute);
         buildAttributes(itemDto, item);
@@ -37,8 +36,7 @@ public class InsertDao {
     }
 
     private void buildAttributes(ItemDto itemDto, Item item) {
-        List<AttributeDto> attributeDtoList = itemDto.getAttributeDtoList().stream()
-                .filter(p -> "attribute".equals(p.getKey())).collect(Collectors.toList());
+        List<AttributeDto> attributeDtoList = itemDto.getAttributeDtoList();
 
         for (AttributeDto attribute : attributeDtoList) {
             if ("string".equals(attribute.getDataType())) {
@@ -69,9 +67,12 @@ public class InsertDao {
         }
     }
 
-    private AttributeDto getPrimaryKetAttribute(ItemDto itemDto, String hash_key) {
-        return itemDto.getAttributeDtoList().stream()
-                .filter(p -> hash_key.equals(p.getKey())).findFirst().orElse(null);
+    private AttributeDto getPrimaryKeyAttribute(ItemDto itemDto, String key) {
+        if ("hash_key".equals(key)) {
+            return itemDto.getHashKey();
+        }
+
+        return itemDto.getRangeKey();
     }
 
 

@@ -9,6 +9,12 @@ public class ItemDto {
     @JsonProperty("table_name")
     private String table;
 
+    @JsonProperty("hash_key")
+    private AttributeDto hashKey;
+
+    @JsonProperty("range_key")
+    private AttributeDto rangeKey;
+
     @JsonProperty("attributes")
     private List<AttributeDto> attributeDtoList;
 
@@ -18,6 +24,22 @@ public class ItemDto {
 
     public void setTable(String table) {
         this.table = table;
+    }
+
+    public AttributeDto getHashKey() {
+        return hashKey;
+    }
+
+    public void setHashKey(AttributeDto hashKey) {
+        this.hashKey = hashKey;
+    }
+
+    public AttributeDto getRangeKey() {
+        return rangeKey;
+    }
+
+    public void setRangeKey(AttributeDto rangeKey) {
+        this.rangeKey = rangeKey;
     }
 
     public List<AttributeDto> getAttributeDtoList() {

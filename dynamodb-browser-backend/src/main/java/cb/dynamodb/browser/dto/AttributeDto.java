@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AttributeDto {
 
-    @JsonProperty("key")
-    private String key;
-
     @JsonProperty("attribute_name")
     private String attributeName;
 
@@ -15,14 +12,6 @@ public class AttributeDto {
 
     @JsonProperty("attribute_value")
     private String value;
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
 
     public String getAttributeName() {
         return attributeName;
@@ -51,8 +40,7 @@ public class AttributeDto {
     @Override
     public String toString() {
         return "AttributeDto{" +
-                "key='" + key + '\'' +
-                ", attributeName='" + attributeName + '\'' +
+                "attributeName='" + attributeName + '\'' +
                 ", dataType='" + dataType + '\'' +
                 ", value='" + value + '\'' +
                 '}';
