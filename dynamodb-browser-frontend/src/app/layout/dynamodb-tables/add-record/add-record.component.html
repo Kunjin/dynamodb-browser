@@ -1,0 +1,65 @@
+<div mat-dialog-content>
+    <form [formGroup]="itemForm">
+
+        <!--<mat-form-field>-->
+        <!--<input matInput placeholder="table" formControlName="table_name" readonly [disabled]>-->
+        <!--</mat-form-field>-->
+        <div formArrayName="attributes">
+            <!-- hash key -->
+
+            <div *ngFor="let item of attributes.controls; let primaryKeyIndex=index" [formGroupName]="primaryKeyIndex">
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Key</mat-label>
+                        <input matInput formControlName="key" value="hash_key" readonly [disabled]>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Attribute Name</mat-label>
+                        <input matInput placeholder="Attribute Name" formControlName="attribute_name"
+                               value="{{keySchema['hash_key']['attribute']}}">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Data Type</mat-label>
+                        <input matInput placeholder="Attribute Name" formControlName="data_type"
+                               value="{{keySchema['hash_key']['data_type']}}">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Attribute Value</mat-label>
+                        <input matInput placeholder="Value" formControlName="attribute_value">
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+            <div *ngFor="let item of attributes.controls; let attributeIndex=index" [formGroupName]="attributeIndex">
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Key</mat-label>
+                        <input matInput formControlName="key" placeholder="Key" >
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Attribute Name</mat-label>
+                        <input matInput placeholder="Attribute Name" formControlName="attribute_name">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Data Type</mat-label>
+                        <mat-select formControlName="data_type"
+                                    disableOptionCentering>
+                            <mat-option value="string">string</mat-option>
+                            <mat-option value="number">number</mat-option>
+                            <mat-option value="boolean">boolean</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Attribute Value</mat-label>
+                        <input matInput placeholder="Value" formControlName="attribute_value">
+                    </mat-form-field>
+                    <button type="button" (click)="deleteAttribute(attributeIndex)">Delete Attribute</button>
+                </div>
+            </div>
+            <button type="button" (click)="addAttribute()">Add Attribute</button>
+        </div>
+    </form>
+
+    {{ this.itemForm.value | json }}
+</div>

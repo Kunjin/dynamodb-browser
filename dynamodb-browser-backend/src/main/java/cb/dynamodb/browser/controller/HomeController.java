@@ -123,7 +123,7 @@ public class HomeController {
         return searchService.getTableDetails(table);
     }
 
-    @PostMapping("item")
+    @PostMapping("data")
     public PutItemOutcome createItem(@RequestBody ItemDto itemDto) {
         return insertService.insert(itemDto);
     }

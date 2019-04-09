@@ -1,15 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-    MatTableModule,
-    MatTooltipModule,
-    MatProgressBarModule,
+    MatButtonModule,
+    MatDialogModule,
     MatInputModule,
+    MatProgressBarModule,
     MatSelectModule,
-    MatButtonModule } from '@angular/material';
+    MatTableModule,
+    MatTooltipModule
+} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamodbTablesComponent } from './dynamodb-tables.component';
 import { DynamodbTablesRoutingModule } from './dynamodb-tables-routing.module';
+import { AddRecordDialog } from './add-record/add-record.component';
 
 @NgModule({
     imports: [
@@ -21,8 +24,10 @@ import { DynamodbTablesRoutingModule } from './dynamodb-tables-routing.module';
         MatSelectModule,
         MatInputModule,
         MatButtonModule,
+        MatDialogModule,
         ReactiveFormsModule,
         FormsModule ],
-    declarations: [ DynamodbTablesComponent ]
+    declarations: [ DynamodbTablesComponent, AddRecordDialog ],
+    entryComponents: [ AddRecordDialog ]
 })
 export class DynamodbTablesModule {}

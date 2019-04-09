@@ -13,7 +13,7 @@ public class AttributeDto {
     @JsonProperty("data_type")
     private String dataType;
 
-    @JsonProperty("value")
+    @JsonProperty("attribute_value")
     private String value;
 
     public String getKey() {

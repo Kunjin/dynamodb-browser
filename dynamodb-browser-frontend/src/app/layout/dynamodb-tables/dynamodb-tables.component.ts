@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { TransactionService } from '../../shared/services';
 import { ActivatedRoute } from '@angular/router';
-import { MatTableDataSource } from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 import _ from 'lodash';
+import { AddRecordDialog } from './add-record/add-record.component';
 
 const HASH = 'HASH';
 const RANGE = 'RANGE';
@@ -30,7 +31,8 @@ export class DynamodbTablesComponent implements OnInit {
     hasRecords = true;
 
     constructor(private transactionsService: TransactionService,
-                private activatedRoute: ActivatedRoute) {
+                private activatedRoute: ActivatedRoute,
+                public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
@@ -51,9 +53,7 @@ export class DynamodbTablesComponent implements OnInit {
 
                     if (HASH === records.table.keySchema[i].keyType) {
                         _.set(hash_key, 'attribute', records.table.keySchema[i].attributeName);
-                    }
-
-                    if (RANGE === records.table.keySchema[i].keyType) {
+                    } else if (RANGE === records.table.keySchema[i].keyType) {
                         _.set(range_key, 'attribute', records.table.keySchema[i].attributeName);
                     }
                 }
@@ -148,6 +148,20 @@ export class DynamodbTablesComponent implements OnInit {
     next() {
         this.reinitializeDataTable();
         this.scanTable(this.exclusiveKeys);
+    }
+
+    createItemDialog(): void {
+        const dialogRef = this.dialog.open(AddRecordDialog, {
+            width: '1000px',
+            height: '500px'
+        });
+
+        dialogRef.componentInstance.table = this.tableParam;
+        dialogRef.componentInstance.keySchema = this.keySchema;
+
+        dialogRef.afterClosed().subscribe(item => {
+            console.log('item: ', item);
+        });
     }
 
     private scanTable(exclusiveKeys ?: object) {

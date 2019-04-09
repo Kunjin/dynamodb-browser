@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { RECORDS_URL, TABLES_URL, OPERATIONS_URL, TABLE_DETAILS_URL, DATA_URL } from '../constants';
+import { RECORDS_URL, TABLES_URL, OPERATIONS_URL, TABLE_DETAILS_URL, DATA_URL, SETTINGS_URL } from '../constants';
 import _ from 'lodash';
 
 @Injectable()
@@ -61,4 +61,10 @@ export class TransactionService {
         return this.http.get(`${DATA_URL}/${table}?hashKey=${hashKey}&operator=${hashKeyOperator}&hashValue=${hashValue}&rangeKey=${rangeKey}&operatorRangeKey=${rangeKeyOperator}&rangeValue=${rangeValue}`);
     }
 
+    createRecord(item: any) {
+        const headers = new HttpHeaders({'Content-Type':'application/json; charset=utf-8'});
+        return this.http.post<any>(`${DATA_URL}`, {
+            item
+        },  { headers: headers });
+    }
 }
