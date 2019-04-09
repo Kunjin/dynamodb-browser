@@ -85,6 +85,7 @@ export class DynamodbTablesComponent implements OnInit {
                 _.set(this.keySchema, 'hash_key', hash_key);
                 _.set(this.keySchema, 'range_key', range_key);
                 console.log(this.keySchema);
+                console.log(this.keySchema['range_key']['attribute']);
             })
 
         });

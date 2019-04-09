@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <div formGroupName="range_key">
+        <div formGroupName="range_key" *ngIf="keySchema['range_key']['attribute'] !== undefined">
             <div>
                 Range Key:
                 <mat-form-field appearance="outline">
