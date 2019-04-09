@@ -61,12 +61,22 @@ export class DynamodbTablesComponent implements OnInit {
                 // get data type of keys
                 for (let i = 0; i < records.table.attributeDefinitions.length; i++) {
 
+                    const attributeType = records.table.attributeDefinitions[i].attributeType;
+                    let dataType;
+                    if (attributeType === 'S') {
+                        dataType = "string";
+                    } else if (attributeType === 'B') {
+                        dataType = "boolean";
+                    } else if (attributeType === 'N') {
+                        dataType = 'number';
+                    }
+
                     if (hash_key['attribute'] === records.table.attributeDefinitions[i].attributeName) {
-                        _.set(hash_key, 'data_type', records.table.attributeDefinitions[i].attributeType);
+                        _.set(hash_key, 'data_type', dataType);
                     }
 
                     if (range_key['attribute'] === records.table.attributeDefinitions[i].attributeName) {
-                        _.set(range_key, 'data_type', records.table.attributeDefinitions[i].attributeType);
+                        _.set(range_key, 'data_type', dataType);
                     }
                 }
 

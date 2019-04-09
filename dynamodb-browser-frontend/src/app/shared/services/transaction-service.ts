@@ -61,7 +61,7 @@ export class TransactionService {
         return this.http.get(`${DATA_URL}/${table}?hashKey=${hashKey}&operator=${hashKeyOperator}&hashValue=${hashValue}&rangeKey=${rangeKey}&operatorRangeKey=${rangeKeyOperator}&rangeValue=${rangeValue}`);
     }
 
-    createRecord(item: any) {
+    saveRecord(item: any) {
         const headers = new HttpHeaders({'Content-Type':'application/json; charset=utf-8'});
         return this.http.post<any>(`${DATA_URL}`, {
             item

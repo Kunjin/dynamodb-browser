@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import _ from 'lodash';
 import { TransactionService } from '../../../shared/services';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Item, Attribute } from './item';
-
-const HASH = 'HASH';
-const RANGE = 'RANGE';
+import { ToastrManager } from 'ng6-toastr-notifications';
 
 @Component({
     selector: 'add-record-dialog',
@@ -18,9 +14,11 @@ export class AddRecordDialog implements OnInit {
     table: string;
     itemForm: FormGroup;
     keySchema: {};
-
+    hash_key: FormGroup;
+    range_key: FormGroup;
 
     constructor(private transactionsService: TransactionService,
+                public toastr: ToastrManager,
                 private fb: FormBuilder) {
         console.log('add record dialog')
     }
@@ -29,42 +27,14 @@ export class AddRecordDialog implements OnInit {
 
         console.log('add-record :', this.keySchema);
 
-            // this.transactionsService.getTableDetails(this.table).subscribe(records => {
-        //     console.log(`${this.table} details: `, records);
-        //
-        //     let hash_key = {};
-        //     let range_key = {};
-        //
-        //     //get key schema
-        //     for (let i = 0; i < records.table.keySchema.length; i++) {
-        //
-        //         if (HASH === records.table.keySchema[i].keyType) {
-        //             _.set(hash_key, 'attribute', records.table.keySchema[i].attributeName);
-        //         } else if (RANGE === records.table.keySchema[i].keyType) {
-        //             _.set(range_key, 'attribute', records.table.keySchema[i].attributeName);
-        //         }
-        //     }
-        //
-        //     // get data type of keys
-        //     for (let i = 0; i < records.table.attributeDefinitions.length; i++) {
-        //
-        //         if (hash_key['attribute'] === records.table.attributeDefinitions[i].attributeName) {
-        //             _.set(hash_key, 'data_type', records.table.attributeDefinitions[i].attributeType);
-        //         }
-        //
-        //         if (range_key['attribute'] === records.table.attributeDefinitions[i].attributeName) {
-        //             _.set(range_key, 'data_type', records.table.attributeDefinitions[i].attributeType);
-        //         }
-        //     }
-        //     _.set(this.keySchema, 'hash_key', hash_key);
-        //     _.set(this.keySchema, 'range_key', range_key);
-        //
-        //
-        // });
+        this.hash_key = this.fb.group({ attribute_name: this.keySchema['hash_key']['attribute'], data_type: this.keySchema['hash_key']['data_type'], attribute_value: ''})
+        this.range_key = this.fb.group({ attribute_name: this.keySchema['range_key']['attribute'], data_type: this.keySchema['range_key']['data_type'], attribute_value: ''});
 
         this.itemForm = this.fb.group({
             table_name: this.table,
-            attributes: this.fb.array([this.fb.group({key:'', attribute_name: '', data_type: '', attribute_value: ''})])
+            hash_key: this.hash_key,
+            range_key: this.range_key,
+            attributes: this.fb.array([this.fb.group({attribute_name: '', data_type: '', attribute_value: ''})])
         })
     }
 
@@ -73,10 +43,25 @@ export class AddRecordDialog implements OnInit {
     }
 
     addAttribute() {
-        this.attributes.push(this.fb.group({key:'', attribute_name: '', data_type: '', attribute_value: ''}));
+        this.attributes.push(this.fb.group({ attribute_name: '', data_type: '', attribute_value: ''}));
     }
 
     deleteAttribute(index) {
         this.attributes.removeAt(index);
+    }
+
+    save() {
+        this.transactionsService.saveRecord(this.itemForm.value).subscribe(result => {
+            console.log('result on saving ', result);
+            this.showSuccessToast();
+        })
+    }
+
+    showSuccessToast() {
+        let message = 'Connection successfully saved.';
+        this.toastr.successToastr('', message, {
+            position: 'bottom-full-width',
+            animate: 'slideFromBottom'
+        });
     }
 }
