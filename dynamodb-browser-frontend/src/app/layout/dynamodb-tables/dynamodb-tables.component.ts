@@ -27,6 +27,7 @@ export class DynamodbTablesComponent implements OnInit {
     rangeKeyValue = '';
     hashKeyValue = '';
     exclusiveKeys = {};
+    hasRecords = true;
 
     constructor(private transactionsService: TransactionService,
                 private activatedRoute: ActivatedRoute) {
@@ -98,12 +99,18 @@ export class DynamodbTablesComponent implements OnInit {
                 this.selectedRangeKeyOperation,
                 this.rangeKeyValue).subscribe(result => {
 
+                if (result.length == 0) {
+                    this.hasRecords = false;
+                    return;
+                }
+
                 let recordsArr = [];
                 //TODO: For now.. Look on how to handle this better!!
                 for (let i = 0; i < result.length; i++) {
                     recordsArr.push(JSON.parse(result[i]));
                 }
                 this.addDataInDataTable(recordsArr);
+
             })
         } else {
             this.transactionsService.queryByHashKey(
@@ -113,6 +120,11 @@ export class DynamodbTablesComponent implements OnInit {
                 this.keySchema['hash_key']['attribute'],
                 this.selectedHashKeyOperation,
                 this.hashKeyValue).subscribe(result => {
+
+                if (result.length == 0) {
+                    this.hasRecords = false;
+                    return;
+                }
 
                 let recordsArr = [];
                 //TODO: For now.. Look on how to handle this better!!
@@ -125,12 +137,12 @@ export class DynamodbTablesComponent implements OnInit {
     }
 
     changeOption() {
-       if ('scan' === this.selectedOption) {
-           this.reinitializeDataTable();
-           this.scanTable();
-       } else {
-           this.exclusiveKeys = {};
-       }
+        if ('scan' === this.selectedOption) {
+            this.reinitializeDataTable();
+            this.scanTable();
+        } else {
+            this.exclusiveKeys = {};
+        }
     }
 
     next() {
@@ -140,7 +152,13 @@ export class DynamodbTablesComponent implements OnInit {
 
     private scanTable(exclusiveKeys ?: object) {
         this.transactionsService.scanTable(this.tableParam, exclusiveKeys).subscribe(results => {
-            let records = _.get(results, "records");
+
+            if (results.records.length == 0) {
+                this.hasRecords = false;
+                return;
+            }
+
+            let records = _.get(results, 'records');
             this.exclusiveKeys = _.get(results, 'exclusiveKeys', null);
 
             if (records.length > 0) {
@@ -161,9 +179,11 @@ export class DynamodbTablesComponent implements OnInit {
     private reinitializeDataTable() {
         this.dataSource = new MatTableDataSource<any>();
         this.columnDefs = [];
+        this.hasRecords = true;
     }
 
     private addDataInDataTable(arr: any[]) {
+        this.hasRecords = true;
         this.dataSource = new MatTableDataSource(arr);
     }
 }

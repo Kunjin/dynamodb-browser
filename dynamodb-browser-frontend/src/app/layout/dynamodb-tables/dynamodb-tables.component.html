@@ -59,7 +59,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="dataSource.data.length > 0">
+    <div *ngIf="dataSource.data.length > 0 && hasRecords">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" width="100%">
             <ng-container *ngFor="let col of columnDefs" matColumnDef={{col}}>
                 <th mat-header-cell *matHeaderCellDef class="header"> {{col}} </th>
@@ -73,7 +73,11 @@
     <div *ngIf="dataSource.data.length > 0 && (exclusiveKeys['hashKeyName'] !== undefined && exclusiveKeys['hashKeyName'] !== null)">
         <button mat-stroked-button (click)="next()">Next</button>
     </div>
-    <div *ngIf="dataSource.data.length == 0">
+    <div *ngIf="dataSource.data.length == 0 && hasRecords">
         <mat-progress-bar mode="query"></mat-progress-bar>
+    </div>
+
+    <div *ngIf="!hasRecords">
+        No records found.
     </div>
 </div>
