@@ -28,11 +28,11 @@ public class SearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchService.class);
 
     public List<String> queryByHashKey(String table, String hashKey, String value, String operator) {
-        return searchDao.searchByHashKey(table, hashKey, value, operator);
+        return searchDao.queryByHashKey(table, hashKey, value, operator);
     }
 
     public List<String> queryByHashKeyAndRangeKey(String table, String hashKey, String value, String operator, String rangeKey, String rangeKeyValue, String operatorRangeKey) {
-        return searchDao.searchByHashKeyAndRangeKey(table, hashKey, value, operator, rangeKey, rangeKeyValue, operatorRangeKey);
+        return searchDao.queryByHashRangeKey(table, hashKey, value, operator, rangeKey, rangeKeyValue, operatorRangeKey);
     }
 
     public Map<String, String> getHashKey(String table) {

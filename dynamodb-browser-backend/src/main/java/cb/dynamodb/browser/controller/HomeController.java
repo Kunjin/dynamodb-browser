@@ -3,10 +3,13 @@ package cb.dynamodb.browser.controller;
 import cb.dynamodb.browser.constants.Operators;
 import cb.dynamodb.browser.dto.ConfigurationDto;
 import cb.dynamodb.browser.dto.ExclusiveKeys;
+import cb.dynamodb.browser.dto.ItemDto;
 import cb.dynamodb.browser.dto.ScanResults;
 import cb.dynamodb.browser.service.ConfigurationsService;
 import cb.dynamodb.browser.service.DynamodbService;
+import cb.dynamodb.browser.service.InsertService;
 import cb.dynamodb.browser.service.SearchService;
+import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.util.StringUtils;
 import org.slf4j.Logger;
@@ -35,6 +38,9 @@ public class HomeController {
 
     @Autowired
     private ConfigurationsService configurationsService;
+
+    @Autowired
+    private InsertService insertService;
 
 
     @GetMapping("tables")
@@ -117,4 +123,8 @@ public class HomeController {
         return searchService.getTableDetails(table);
     }
 
+    @PostMapping("item")
+    public PutItemOutcome createItem(@RequestBody ItemDto itemDto) {
+        return insertService.insert(itemDto);
+    }
 }

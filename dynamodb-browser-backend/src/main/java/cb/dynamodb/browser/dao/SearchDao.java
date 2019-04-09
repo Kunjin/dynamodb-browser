@@ -31,7 +31,7 @@ public class SearchDao {
     @Value("${dynamodb.pageSize}")
     private int dynamoPageSize;
 
-    public List<String> searchByHashKey(String table, String hashKey, String value, String operator) {
+    public List<String> queryByHashKey(String table, String hashKey, String value, String operator) {
         List<String> results = new ArrayList<>();
         Table dynamoDBTable = getTable(table);
 
@@ -54,7 +54,7 @@ public class SearchDao {
         return results;
     }
 
-    public List<String> searchByHashKeyAndRangeKey(String table, String hashKey, String hashKeyValue, String operator, String rangeKey, String rangeKeyValue, String operatorRangeKeyValue) {
+    public List<String> queryByHashRangeKey(String table, String hashKey, String hashKeyValue, String operator, String rangeKey, String rangeKeyValue, String operatorRangeKeyValue) {
         List<String> results = new ArrayList<>();
         Table dynamoDBTable = getTable(table);
 
