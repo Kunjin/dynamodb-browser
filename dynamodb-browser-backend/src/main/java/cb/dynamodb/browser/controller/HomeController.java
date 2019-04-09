@@ -75,8 +75,8 @@ public class HomeController {
 
     @RequestMapping("records/{table}")
     public ScanResults scanTable(@PathVariable String table, ExclusiveKeys exclusiveKeys) {
-        LOGGER.info("{} ", searchService.queryAllByTable(table, exclusiveKeys));
-        return searchService.queryAllByTable(table, exclusiveKeys);
+        LOGGER.info("{} ", searchService.scanByTable(table, exclusiveKeys));
+        return searchService.scanByTable(table, exclusiveKeys);
     }
 
     @RequestMapping("secondaryIndexRangeKey/{table}")

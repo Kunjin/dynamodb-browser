@@ -25,6 +25,8 @@ public class SearchService {
     @Autowired
     private SearchDao searchDao;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchService.class);
+
     public List<String> queryByHashKey(String table, String hashKey, String value, String operator) {
         return searchDao.searchByHashKey(table, hashKey, value, operator);
     }
@@ -50,19 +52,24 @@ public class SearchService {
         TableDescription tableSchema = getAmazonDynamodbClient().describeTable(table).getTable();
 
         Map<String, String> map = new HashMap<>();
-        map.put("key", getAttributeName(tableSchema, KeyType.RANGE));
-        map.put("data_type", getKeyType(tableSchema, KeyType.RANGE));
+        String attributeName = getAttributeName(tableSchema, KeyType.RANGE);
+        if (attributeName != null) {
+            map.put("key", attributeName);
+            map.put("data_type", getKeyType(tableSchema, KeyType.RANGE));
+        }
+
         return map;
     }
 
-    public ScanResults queryAllByTable(String table, ExclusiveKeys exclusiveKeys) {
+    public ScanResults scanByTable(String table, ExclusiveKeys exclusiveKeys) {
         //   ExclusiveKeys exclusiveKeys = new ExclusiveKeys("isin", "aaa", "mic_code", "FRAB01-01-2001");
+
         Map<String, String> hashKeyMap = getHashKey(table);
         Map<String, String> rangeKey = getRangeKey(table);
 
         KeysAttribute keysAttribute = new KeysAttribute(hashKeyMap.get("key"), rangeKey.get("key"));
 
-        return searchDao.searchAllByTable(table, keysAttribute, exclusiveKeys);
+        return searchDao.scan(table, keysAttribute, exclusiveKeys);
     }
 
     public String getSecondaryIndexRangeKey(String table) {
@@ -89,9 +96,14 @@ public class SearchService {
 
 
     private String getAttributeName(TableDescription tableSchema, KeyType hash) {
-        return tableSchema.getKeySchema().stream()
-                .filter(x -> x.getKeyType().equals(hash.toString()))
-                .findFirst().get().getAttributeName();
+        try {
+           return tableSchema.getKeySchema().stream()
+                    .filter(x -> x.getKeyType().equals(hash.toString()))
+                    .findFirst().get().getAttributeName();
+        } catch (Exception e) {
+            LOGGER.info("Failed to get attribute name because of ", e);
+            return null;
+        }
     }
 
     private String getKeyType(TableDescription tableSchema, KeyType hash) {

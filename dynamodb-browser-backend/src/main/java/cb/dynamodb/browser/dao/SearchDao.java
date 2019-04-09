@@ -13,6 +13,7 @@ import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -20,11 +21,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
 @Repository
 public class SearchDao {
     private static final String RANGE = "RANGE";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchDao.class);
+
+    @Value("${dynamodb.pageSize}")
+    private int dynamoPageSize;
 
     public List<String> searchByHashKey(String table, String hashKey, String value, String operator) {
         List<String> results = new ArrayList<>();
@@ -43,7 +48,7 @@ public class SearchDao {
             while (iterator.hasNext()) {
                 results.add(iterator.next().toJSON());
             }
-        }  catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.error("Unable to query from table {} where {} = {} due to: ", table, hashKey, value, e);
         }
         return results;
@@ -67,31 +72,41 @@ public class SearchDao {
             while (iterator.hasNext()) {
                 results.add(iterator.next().toJSON());
             }
-        }  catch (AmazonDynamoDBException e) {
+        } catch (AmazonDynamoDBException e) {
             try {
                 return searchBySecondaryIndex(table, hashKey, hashKeyValue, operator, rangeKey, rangeKeyValue, operatorRangeKeyValue);
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 LOGGER.error("Unable to query from table {} where {} = {} due to:", table, hashKey, hashKeyValue, ex);
             }
         }
         return results;
     }
 
-    public ScanResults searchAllByTable(String table, KeysAttribute keysAttribute, ExclusiveKeys exclusiveKeys) {
+    public ScanResults scan(String table, KeysAttribute keysAttribute, ExclusiveKeys exclusiveKeys) {
 
         Table dynamoDBTable = getTable(table);
         ScanSpec spec;
 
         if (exclusiveKeys.getHashKeyName() == null || exclusiveKeys.getRangeKeyName() == null) {
-            spec = new ScanSpec().withMaxPageSize(100).withMaxResultSize(100);
+            spec = new ScanSpec().withMaxPageSize(dynamoPageSize).withMaxResultSize(dynamoPageSize);
         } else {
-            spec = new ScanSpec().withMaxPageSize(100)
-                    .withExclusiveStartKey(
-                            exclusiveKeys.getHashKeyName(),
-                            exclusiveKeys.getHashKeyValue(),
-                            exclusiveKeys.getRangeKeyName(),
-                            exclusiveKeys.getRangeKeyValue())
-                    .withMaxResultSize(100); }
+
+            if (keysAttribute.getRangeKey() != null) {
+                spec = new ScanSpec().withMaxPageSize(dynamoPageSize)
+                        .withExclusiveStartKey(
+                                exclusiveKeys.getHashKeyName(),
+                                exclusiveKeys.getHashKeyValue(),
+                                exclusiveKeys.getRangeKeyName(),
+                                exclusiveKeys.getRangeKeyValue())
+                        .withMaxResultSize(dynamoPageSize);
+            } else {
+                spec = new ScanSpec().withMaxPageSize(dynamoPageSize)
+                        .withExclusiveStartKey(
+                                exclusiveKeys.getHashKeyName(),
+                                exclusiveKeys.getHashKeyValue())
+                        .withMaxResultSize(dynamoPageSize);
+            }
+        }
 
         ItemCollection<ScanOutcome> items;
         ScanResults scanResults = new ScanResults();
@@ -132,7 +147,7 @@ public class SearchDao {
                 }
 
             }
-        }  catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.error("Unable to query from table {} due to:", table, e);
         }
 
