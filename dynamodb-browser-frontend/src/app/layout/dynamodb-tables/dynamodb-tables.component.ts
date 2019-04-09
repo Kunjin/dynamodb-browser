@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import _ from 'lodash';
 import { AddRecordDialog } from './add-record/add-record.component';
+import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
 
 const HASH = 'HASH';
 const RANGE = 'RANGE';
@@ -29,6 +30,7 @@ export class DynamodbTablesComponent implements OnInit {
     hashKeyValue = '';
     exclusiveKeys = {};
     hasRecords = true;
+    renderedData: any;
 
     constructor(private transactionsService: TransactionService,
                 private activatedRoute: ActivatedRoute,
@@ -209,5 +211,10 @@ export class DynamodbTablesComponent implements OnInit {
     private addDataInDataTable(arr: any[]) {
         this.hasRecords = true;
         this.dataSource = new MatTableDataSource(arr);
+        this.dataSource.connect().subscribe(d => this.renderedData = d);
+    }
+
+    exportCsv(){
+        new Angular5Csv(this.renderedData, 'results');
     }
 }
