@@ -22,7 +22,7 @@
                 <span>Hash Key</span>
             </div>
             <div class="col-3">
-                <span> {{keySchema['hash_key']['attribute']}}:{{keySchema['hash_key']['data_type']}} </span>
+                <span> {{keySchema['hash_key']['attribute']}}: {{keySchema['hash_key']['data_type']}} </span>
             </div>
             <div class="col-3">
                 <mat-form-field appearance="outline">
@@ -41,10 +41,10 @@
         </div>
         <div class="row mt-3" *ngIf="keySchema['range_key']['attribute'] !== undefined">
             <div class="col-3">
-                Range Key
+               <span> Range Key </span>
             </div>
             <div class="col-3">
-                {{keySchema['range_key']['attribute']}}:{{keySchema['range_key']['data_type']}}
+               <span>{{keySchema['range_key']['attribute']}}: {{keySchema['range_key']['data_type']}}</span>
             </div>
             <div class="col-3">
                 <mat-form-field appearance="outline">
