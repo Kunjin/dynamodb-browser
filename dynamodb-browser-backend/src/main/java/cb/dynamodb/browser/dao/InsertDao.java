@@ -56,7 +56,9 @@ public class InsertDao {
             primaryKeyAttributesMap.put("range_key", rangeKeyAttribute);
         }
 
-        if (!primaryKeyAttributesMap.containsKey("range_key")) {
+        if ((primaryKeyAttributesMap.containsKey("range_key") &&
+                primaryKeyAttributesMap.get("range_key").getAttributeName() == null) ||
+                !primaryKeyAttributesMap.containsKey("range_key")) {
             item.withPrimaryKey(primaryKeyAttributesMap.get("hash_key").getAttributeName(),
                     primaryKeyAttributesMap.get("hash_key").getValue());
         } else {

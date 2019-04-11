@@ -1,5 +1,6 @@
 package cb.dynamodb.browser.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -17,6 +18,7 @@ public class ItemDto {
     private AttributeDto hashKey;
 
     @JsonProperty("range_key")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private AttributeDto rangeKey;
 
     @JsonProperty("attributes")
