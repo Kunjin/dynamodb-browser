@@ -1,18 +1,14 @@
 package cb.dynamodb.browser.dto;
 
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.fasterxml.jackson.annotation.JsonRawValue;
-
 public class RecordResult {
 
-    @JsonRawValue
-    private Item record;
+    private String record;
 
-    public Item getRecord() {
+    public String getRecord() {
         return record;
     }
 
-    public void setRecord(Item record) {
+    public void setRecord(String record) {
         this.record = record;
     }
 }

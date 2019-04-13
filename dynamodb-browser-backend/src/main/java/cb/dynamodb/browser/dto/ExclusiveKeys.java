@@ -1,5 +1,6 @@
 package cb.dynamodb.browser.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ExclusiveKeys {
@@ -11,9 +12,11 @@ public class ExclusiveKeys {
     private Object hashKeyValue;
 
     @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String rangeKeyName;
 
     @JsonProperty
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object rangeKeyValue;
 
     public ExclusiveKeys() { }

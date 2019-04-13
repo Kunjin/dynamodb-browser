@@ -1,15 +1,13 @@
 package cb.dynamodb.browser.controller;
 
 import cb.dynamodb.browser.constants.Operators;
-import cb.dynamodb.browser.dto.ConfigurationDto;
-import cb.dynamodb.browser.dto.ExclusiveKeys;
-import cb.dynamodb.browser.dto.ItemDto;
-import cb.dynamodb.browser.dto.ScanResults;
+import cb.dynamodb.browser.dto.*;
 import cb.dynamodb.browser.service.AwsService;
 import cb.dynamodb.browser.service.ConfigurationsService;
 import cb.dynamodb.browser.service.SearchService;
 import cb.dynamodb.browser.service.TransactionalService;
 import com.amazonaws.services.dynamodbv2.document.DeleteItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.util.StringUtils;
@@ -132,5 +130,10 @@ public class HomeController {
     @PutMapping("data")
     public DeleteItemOutcome deleteItem(@RequestBody ItemDto itemDto) {
         return transactionService.delete(itemDto);
+    }
+
+    @GetMapping("data")
+    public RecordResult getItem(@RequestParam String table, ExclusiveKeys exclusiveKeys) {
+        return transactionService.read(table, exclusiveKeys);
     }
 }

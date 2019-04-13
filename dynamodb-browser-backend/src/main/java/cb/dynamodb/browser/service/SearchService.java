@@ -62,8 +62,6 @@ public class SearchService {
     }
 
     public ScanResults scanByTable(String table, ExclusiveKeys exclusiveKeys) {
-        //   ExclusiveKeys exclusiveKeys = new ExclusiveKeys("isin", "aaa", "mic_code", "FRAB01-01-2001");
-
         Map<String, String> hashKeyMap = getHashKey(table);
         Map<String, String> rangeKey = getRangeKey(table);
 

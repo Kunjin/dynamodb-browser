@@ -141,8 +141,8 @@ public class SearchDao {
                 scanResults.setExclusiveKeys(keys);
                 while (item.hasNext()) {
                     Item next = item.next();
-                    RecordResult recordResult = new RecordResult();
-                    recordResult.setRecord(next);
+//                    RecordResult recordResult = new RecordResult();
+//                    recordResult.setRecord(next);
                     results.add(next.toJSON());
                 }
 
