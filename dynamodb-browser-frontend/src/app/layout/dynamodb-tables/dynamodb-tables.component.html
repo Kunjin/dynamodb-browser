@@ -77,10 +77,10 @@
                 </template>
                 <template *ngIf="col === 'actions'">
                     <td mat-cell *matCellDef="let element">
-                        <a href="javascript:void(0)" title="View" (click)="openViewRecordDialog(element)"
+                        <a href="javascript:void(0)" title="View" (click)="editRecordDialog(element)"
                            class="fa fa-address-card"> </a>
                         &nbsp; &nbsp;
-                        <a href="javascript:void(0)" title="Delete" (click)="openDeleteRecordDialog(element)"
+                        <a href="javascript:void(0)" title="Delete" (click)="deleteRecordDialog(element)"
                                   class="fa fa-trash"> </a>
                 </template>
             </ng-container>

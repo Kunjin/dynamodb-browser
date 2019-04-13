@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { AddRecordDialog } from './add-record/add-record.component';
 import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
 import { DeleteRecordDialog } from './delete-record/delete-record.component';
+import { EditRecordDialog } from './edit-record/edit-record.component';
 
 const HASH = 'HASH';
 const RANGE = 'RANGE';
@@ -60,9 +61,9 @@ export class DynamodbTablesComponent implements OnInit {
                     const attributeType = records.table.attributeDefinitions[i].attributeType;
                     let dataType;
                     if (attributeType === 'S') {
-                        dataType = "string";
+                        dataType = 'string';
                     } else if (attributeType === 'B') {
-                        dataType = "boolean";
+                        dataType = 'boolean';
                     } else if (attributeType === 'N') {
                         dataType = 'number';
                     }
@@ -171,12 +172,12 @@ export class DynamodbTablesComponent implements OnInit {
         });
     }
 
-    openDeleteRecordDialog(element): void {
+    deleteRecordDialog(element): void {
         this.transactionsService.getTableDetails(this.tableParam).subscribe(records => {
             let hash_key = {};
             let range_key = {};
             this.getKeySchema(records, hash_key, range_key);
-            console.log("element:", element);
+            console.log('element:', element);
 
             const dialogRef = this.dialog.open(DeleteRecordDialog, {
                 width: '500px',
@@ -196,8 +197,42 @@ export class DynamodbTablesComponent implements OnInit {
 
     }
 
-    openViewRecordDialog(element): void {
-        console.log("element:", element);
+    editRecordDialog(element): void {
+        console.log('element:', element);
+
+        let hash_key = {
+            'attribute_name': this.keySchema['hash_key']['attribute'],
+            'data_type': this.keySchema['hash_key']['data_type'],
+            'attribute_value': _.get(element, this.keySchema['hash_key']['attribute']),
+        }
+
+        let range_key = {
+            'attribute_name': this.keySchema['range_key']['attribute'],
+            'data_type': this.keySchema['range_key']['data_type'],
+            'attribute_value': _.get(element, this.keySchema['range_key']['attribute']),
+        }
+
+        let itemExclusiveKeys = {
+            'hashKeyName': this.keySchema['hash_key']['attribute'],
+            'hashKeyValue': _.get(element, this.keySchema['hash_key']['attribute']),
+            'rangeKeyName': this.keySchema['range_key']['attribute'],
+            'rangeKeyValue': _.get(element, this.keySchema['range_key']['attribute'])
+        }
+
+
+
+
+        this.transactionsService.editRecord(this.tableParam, itemExclusiveKeys).subscribe(item => {
+            const dialogRef = this.dialog.open(EditRecordDialog, {
+                width: '500px',
+                height: '200px'
+            });
+
+            console.log('item to update: ', item);
+
+            console.log(hash_key);
+            console.log(range_key);
+        });
     }
 
 
@@ -254,7 +289,7 @@ export class DynamodbTablesComponent implements OnInit {
         }
     }
 
-    exportCsv(){
+    exportCsv() {
         new Angular5Csv(this.renderedData, 'results');
     }
 }
