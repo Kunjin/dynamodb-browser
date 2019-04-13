@@ -19,6 +19,8 @@ import java.util.Map;
 public class InsertDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InsertDao.class);
+    public static final String HASH_KEY = "hash_key";
+    public static final String RANGE_KEY = "range_key";
 
 
     public PutItemOutcome insert(ItemDto itemDto) {
@@ -26,8 +28,8 @@ public class InsertDao {
 
         Item item = new Item();
         Map<String, AttributeDto> primaryKeyAttributesMap = new HashMap<>();
-        AttributeDto hashKeyAttribute = getPrimaryKeyAttribute(itemDto, "hash_key");
-        AttributeDto rangeKeyAttribute = getPrimaryKeyAttribute(itemDto, "range_key");
+        AttributeDto hashKeyAttribute = getPrimaryKeyAttribute(itemDto, HASH_KEY);
+        AttributeDto rangeKeyAttribute = getPrimaryKeyAttribute(itemDto, RANGE_KEY);
 
         buildPrimaryKeys(item, primaryKeyAttributesMap, hashKeyAttribute, rangeKeyAttribute);
         buildAttributes(itemDto, item);
@@ -50,27 +52,27 @@ public class InsertDao {
     }
 
     private void buildPrimaryKeys(Item item, Map<String, AttributeDto> primaryKeyAttributesMap, AttributeDto hashKeyAttribute, AttributeDto rangeKeyAttribute) {
-        primaryKeyAttributesMap.put("hash_key", hashKeyAttribute);
+        primaryKeyAttributesMap.put(HASH_KEY, hashKeyAttribute);
 
         if (rangeKeyAttribute != null) {
-            primaryKeyAttributesMap.put("range_key", rangeKeyAttribute);
+            primaryKeyAttributesMap.put(RANGE_KEY, rangeKeyAttribute);
         }
 
-        if ((primaryKeyAttributesMap.containsKey("range_key") &&
-                primaryKeyAttributesMap.get("range_key").getAttributeName() == null) ||
-                !primaryKeyAttributesMap.containsKey("range_key")) {
-            item.withPrimaryKey(primaryKeyAttributesMap.get("hash_key").getAttributeName(),
-                    primaryKeyAttributesMap.get("hash_key").getValue());
+        if ((primaryKeyAttributesMap.containsKey(RANGE_KEY) &&
+                primaryKeyAttributesMap.get(RANGE_KEY).getAttributeName() == null) ||
+                !primaryKeyAttributesMap.containsKey(RANGE_KEY)) {
+            item.withPrimaryKey(primaryKeyAttributesMap.get(HASH_KEY).getAttributeName(),
+                    primaryKeyAttributesMap.get(HASH_KEY).getValue());
         } else {
-            item.withPrimaryKey(primaryKeyAttributesMap.get("hash_key").getAttributeName(),
-                    primaryKeyAttributesMap.get("hash_key").getValue(),
-                    primaryKeyAttributesMap.get("range_key").getAttributeName(),
-                    primaryKeyAttributesMap.get("range_key").getValue());
+            item.withPrimaryKey(primaryKeyAttributesMap.get(HASH_KEY).getAttributeName(),
+                    primaryKeyAttributesMap.get(HASH_KEY).getValue(),
+                    primaryKeyAttributesMap.get(RANGE_KEY).getAttributeName(),
+                    primaryKeyAttributesMap.get(RANGE_KEY).getValue());
         }
     }
 
     private AttributeDto getPrimaryKeyAttribute(ItemDto itemDto, String key) {
-        if ("hash_key".equals(key)) {
+        if (HASH_KEY.equals(key)) {
             return itemDto.getHashKey();
         }
 

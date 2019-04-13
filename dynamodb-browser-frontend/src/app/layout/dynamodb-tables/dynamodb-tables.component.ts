@@ -177,6 +177,15 @@ export class DynamodbTablesComponent implements OnInit {
         });
     }
 
+    openDeleteRecordDialog(element): void {
+        console.log("element:", element);
+    }
+
+    openViewRecordDialog(element): void {
+        console.log("element:", element);
+    }
+
+
     private scanTable(exclusiveKeys ?: object) {
         this.transactionsService.scanTable(this.tableParam, exclusiveKeys).subscribe(results => {
 
@@ -192,6 +201,10 @@ export class DynamodbTablesComponent implements OnInit {
                 for (let column in JSON.parse(records[0])) {
                     this.columnDefs.push(column);
                 }
+
+                // add action in columns
+                this.columnDefs.push('actions');
+
                 this.dataSource = results;
                 let recordsArr = [];
                 //TODO: For now.. Look on how to handle this better!!
