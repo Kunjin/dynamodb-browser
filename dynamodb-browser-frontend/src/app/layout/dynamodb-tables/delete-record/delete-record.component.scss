@@ -1,3 +1,15 @@
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+th, td {
+  overflow: hidden;
+  width:auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .rounded-btn {
   -webkit-border-radius: 50px;
   border-radius: 50px;

@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamodbTablesComponent } from './dynamodb-tables.component';
 import { DynamodbTablesRoutingModule } from './dynamodb-tables-routing.module';
 import { AddRecordDialog } from './add-record/add-record.component';
+import { DeleteRecordDialog } from './delete-record/delete-record.component';
 
 @NgModule({
     imports: [
@@ -27,7 +28,7 @@ import { AddRecordDialog } from './add-record/add-record.component';
         MatDialogModule,
         ReactiveFormsModule,
         FormsModule ],
-    declarations: [ DynamodbTablesComponent, AddRecordDialog ],
-    entryComponents: [ AddRecordDialog ]
+    declarations: [ DynamodbTablesComponent, AddRecordDialog, DeleteRecordDialog ],
+    entryComponents: [ AddRecordDialog, DeleteRecordDialog ]
 })
 export class DynamodbTablesModule {}

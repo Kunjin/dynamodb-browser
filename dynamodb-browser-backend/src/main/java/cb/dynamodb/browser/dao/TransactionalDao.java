@@ -40,14 +40,11 @@ public class TransactionalDao {
         if (itemDto.getRangeKey() != null) {
             DeleteItemOutcome deleteItemOutcome = table.deleteItem(itemDto.getHashKey().getAttributeName(), itemDto.getHashKey().getValue(),
                     itemDto.getRangeKey().getAttributeName(), itemDto.getRangeKey().getValue());
-            LOGGER.info("Deleted result: ", deleteItemOutcome);
 
             return deleteItemOutcome;
         }
 
         DeleteItemOutcome deleteItemOutcome = table.deleteItem(itemDto.getHashKey().getAttributeName(), itemDto.getHashKey().getValue());
-        LOGGER.info("Deleted result: ", deleteItemOutcome);
-
         return deleteItemOutcome;
 
     }

@@ -1,5 +1,6 @@
 package cb.dynamodb.browser.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AttributeDto {
@@ -8,6 +9,7 @@ public class AttributeDto {
     private String attributeName;
 
     @JsonProperty("data_type")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String dataType;
 
     @JsonProperty("attribute_value")

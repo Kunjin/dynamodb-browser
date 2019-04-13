@@ -129,7 +129,7 @@ public class HomeController {
         return transactionService.insert(itemDto);
     }
 
-    @DeleteMapping("data")
+    @PutMapping("data")
     public DeleteItemOutcome deleteItem(@RequestBody ItemDto itemDto) {
         return transactionService.delete(itemDto);
     }

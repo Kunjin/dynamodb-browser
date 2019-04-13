@@ -6,6 +6,7 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import _ from 'lodash';
 import { AddRecordDialog } from './add-record/add-record.component';
 import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
+import { DeleteRecordDialog } from './delete-record/delete-record.component';
 
 const HASH = 'HASH';
 const RANGE = 'RANGE';
@@ -51,14 +52,7 @@ export class DynamodbTablesComponent implements OnInit {
                 let range_key = {};
 
                 //get key schema
-                for (let i = 0; i < records.table.keySchema.length; i++) {
-
-                    if (HASH === records.table.keySchema[i].keyType) {
-                        _.set(hash_key, 'attribute', records.table.keySchema[i].attributeName);
-                    } else if (RANGE === records.table.keySchema[i].keyType) {
-                        _.set(range_key, 'attribute', records.table.keySchema[i].attributeName);
-                    }
-                }
+                this.getKeySchema(records, hash_key, range_key);
 
                 // get data type of keys
                 for (let i = 0; i < records.table.attributeDefinitions.length; i++) {
@@ -178,7 +172,28 @@ export class DynamodbTablesComponent implements OnInit {
     }
 
     openDeleteRecordDialog(element): void {
-        console.log("element:", element);
+        this.transactionsService.getTableDetails(this.tableParam).subscribe(records => {
+            let hash_key = {};
+            let range_key = {};
+            this.getKeySchema(records, hash_key, range_key);
+            console.log("element:", element);
+
+            const dialogRef = this.dialog.open(DeleteRecordDialog, {
+                width: '500px',
+                height: '200px'
+            });
+
+            dialogRef.componentInstance.table = this.tableParam;
+            dialogRef.componentInstance.hash_key = hash_key;
+            dialogRef.componentInstance.range_key = range_key;
+            dialogRef.componentInstance.currentRecord = element;
+
+            dialogRef.afterClosed().subscribe(item => {
+                console.log('item: ', item);
+            });
+        });
+
+
     }
 
     openViewRecordDialog(element): void {
@@ -226,6 +241,17 @@ export class DynamodbTablesComponent implements OnInit {
         this.hasRecords = true;
         this.dataSource = new MatTableDataSource(arr);
         this.dataSource.connect().subscribe(d => this.renderedData = d);
+    }
+
+    private getKeySchema(records, hash_key, range_key) {
+        for (let i = 0; i < records.table.keySchema.length; i++) {
+
+            if (HASH === records.table.keySchema[i].keyType) {
+                _.set(hash_key, 'attribute', records.table.keySchema[i].attributeName);
+            } else if (RANGE === records.table.keySchema[i].keyType) {
+                _.set(range_key, 'attribute', records.table.keySchema[i].attributeName);
+            }
+        }
     }
 
     exportCsv(){

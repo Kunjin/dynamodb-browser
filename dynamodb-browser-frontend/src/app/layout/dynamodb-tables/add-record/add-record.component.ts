@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TransactionService } from '../../../shared/services';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ToastrManager } from 'ng6-toastr-notifications';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'add-record-dialog',
@@ -18,17 +19,26 @@ export class AddRecordDialog implements OnInit {
     range_key: FormGroup;
 
     constructor(private transactionsService: TransactionService,
+                public dialogRef: MatDialogRef<AddRecordDialog>,
                 public toastr: ToastrManager,
                 private fb: FormBuilder) {
-        console.log('add record dialog')
+        console.log('add record dialog');
     }
 
     ngOnInit(): void {
 
         console.log('add-record :', this.keySchema);
 
-        this.hash_key = this.fb.group({ attribute_name: this.keySchema['hash_key']['attribute'], data_type: this.keySchema['hash_key']['data_type'], attribute_value: ''})
-        this.range_key = this.fb.group({ attribute_name: this.keySchema['range_key']['attribute'], data_type: this.keySchema['range_key']['data_type'], attribute_value: ''});
+        this.hash_key = this.fb.group({
+            attribute_name: this.keySchema['hash_key']['attribute'],
+            data_type: this.keySchema['hash_key']['data_type'],
+            attribute_value: ''
+        })
+        this.range_key = this.fb.group({
+            attribute_name: this.keySchema['range_key']['attribute'],
+            data_type: this.keySchema['range_key']['data_type'],
+            attribute_value: ''
+        });
 
         this.itemForm = this.fb.group({
             table_name: this.table,
@@ -43,7 +53,7 @@ export class AddRecordDialog implements OnInit {
     }
 
     addAttribute() {
-        this.attributes.push(this.fb.group({ attribute_name: '', data_type: '', attribute_value: ''}));
+        this.attributes.push(this.fb.group({attribute_name: '', data_type: '', attribute_value: ''}));
     }
 
     deleteAttribute(index) {
@@ -53,15 +63,28 @@ export class AddRecordDialog implements OnInit {
     save() {
         this.transactionsService.saveRecord(this.itemForm.value).subscribe(result => {
             console.log('result on saving ', result);
-            this.showSuccessToast();
+            this.showResultToast(true);
+            this.dialogRef.close();
+        }, err => {
+            this.showResultToast(false);
         })
     }
 
-    showSuccessToast() {
-        let message = 'Connection successfully saved.';
-        this.toastr.successToastr('', message, {
-            position: 'bottom-full-width',
-            animate: 'slideFromBottom'
-        });
+    showResultToast(isSuccess: boolean) {
+        let message;
+
+        if (isSuccess === true) {
+            message = 'Record successfully saved.';
+            this.toastr.successToastr('', message, {
+                position: 'bottom-full-width',
+                animate: 'slideFromBottom'
+            });
+        } else {
+            message = 'Failed to saved record';
+            this.toastr.errorToastr('', message, {
+                position: 'bottom-full-width',
+                animate: 'slideFromBottom'
+            });
+        }
     }
 }

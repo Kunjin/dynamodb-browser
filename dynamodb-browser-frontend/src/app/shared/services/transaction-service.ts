@@ -67,4 +67,11 @@ export class TransactionService {
             item
         },  { headers: headers });
     }
+
+    deleteRecord(item: any) {
+        const headers = new HttpHeaders({'Content-Type':'application/json; charset=utf-8'});
+        return this.http.put<any>(`${DATA_URL}`, {
+            item
+        },  { headers: headers });
+    }
 }
