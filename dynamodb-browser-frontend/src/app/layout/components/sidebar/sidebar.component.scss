@@ -1,4 +1,4 @@
-$topnav-background-color: #222;
+$topnav-background-color: #0a4466;
 .sidebar {
     border-radius: 0;
     position: fixed;
@@ -7,12 +7,12 @@ $topnav-background-color: #222;
     left: 235px;
     width: 235px;
     margin-left: -235px;
-    margin-bottom: 48px;
+    margin-bottom: 0px;
     border: none;
     border-radius: 0;
     overflow-y: auto;
     background-color: $topnav-background-color;
-    bottom: 0;
+    bottom: 0px;
     overflow-x: hidden;
     padding-bottom: 40px;
     white-space: nowrap;
@@ -27,7 +27,7 @@ $topnav-background-color: #222;
             background: $topnav-background-color;
             border: 0;
             border-radius: 0;
-            color: #999;
+            color: #fcf8f4;
             text-decoration: none;
             .fa {
                 margin-right: 10px;
@@ -38,12 +38,12 @@ $topnav-background-color: #222;
             color: #fff;
         }
         a.router-link-active {
-            background: darken($topnav-background-color, 5%);
+            background: #bacec6;
             color: #fff;
         }
         .header-fields {
             padding-top: 10px;
-        
+
             > .list-group-item:first-child {
                 border-top: 1px solid rgba(255, 255, 255, 0.2);
             }
@@ -121,7 +121,7 @@ $topnav-background-color: #222;
             height: auto;
             li {
                 a {
-                    color: #fff;
+                    color: #e1f9ef;
                     padding: 10px;
                     display: block;
                 }
@@ -160,32 +160,3 @@ $topnav-background-color: #222;
     -webkit-box-shadow: inset 0 0 3px rgba(255, 255, 255, 1);
 }
 
-.toggle-button {
-    position: fixed;
-    width: 236px;
-    cursor: pointer;
-    padding: 12px;
-    bottom: 0;
-    color: #999;
-    background: #212529;
-    i {
-        font-size: 23px;
-    }
-    &:hover {
-        background: darken($topnav-background-color, 5%);
-        color: #fff;
-    }
-    border-top: 1px solid #999;
-    -webkit-transition: all 0.2s ease-in-out;
-    -moz-transition: all 0.2s ease-in-out;
-    -ms-transition: all 0.2s ease-in-out;
-    -o-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
-}
-
-.collapsed {
-    width: 50px;
-    span {
-        display: none;
-    }
-}

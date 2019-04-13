@@ -3,10 +3,7 @@ package cb.dynamodb.browser.dao;
 import cb.dynamodb.browser.aws.DatabaseConfiguration;
 import cb.dynamodb.browser.dto.AttributeDto;
 import cb.dynamodb.browser.dto.ItemDto;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
-import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -16,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class InsertDao {
+public class TransactionalDao {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(InsertDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionalDao.class);
     public static final String HASH_KEY = "hash_key";
     public static final String RANGE_KEY = "range_key";
 
@@ -35,6 +32,24 @@ public class InsertDao {
         buildAttributes(itemDto, item);
 
         return table.putItem(item);
+    }
+
+    public DeleteItemOutcome delete(ItemDto itemDto) {
+        Table table = getTable(itemDto.getTable());
+
+        if (itemDto.getRangeKey() != null) {
+            DeleteItemOutcome deleteItemOutcome = table.deleteItem(itemDto.getHashKey().getAttributeName(), itemDto.getHashKey().getValue(),
+                    itemDto.getRangeKey().getAttributeName(), itemDto.getRangeKey().getValue());
+            LOGGER.info("Deleted result: ", deleteItemOutcome);
+
+            return deleteItemOutcome;
+        }
+
+        DeleteItemOutcome deleteItemOutcome = table.deleteItem(itemDto.getHashKey().getAttributeName(), itemDto.getHashKey().getValue());
+        LOGGER.info("Deleted result: ", deleteItemOutcome);
+
+        return deleteItemOutcome;
+
     }
 
     private void buildAttributes(ItemDto itemDto, Item item) {

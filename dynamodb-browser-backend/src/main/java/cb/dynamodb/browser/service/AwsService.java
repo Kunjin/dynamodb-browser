@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
-public class DynamodbService {
+public class AwsService {
 
     public List<String> getRegions() {
         List<String> regionList = new ArrayList<>();

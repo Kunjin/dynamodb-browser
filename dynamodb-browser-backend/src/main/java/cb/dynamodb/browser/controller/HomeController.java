@@ -5,10 +5,11 @@ import cb.dynamodb.browser.dto.ConfigurationDto;
 import cb.dynamodb.browser.dto.ExclusiveKeys;
 import cb.dynamodb.browser.dto.ItemDto;
 import cb.dynamodb.browser.dto.ScanResults;
+import cb.dynamodb.browser.service.AwsService;
 import cb.dynamodb.browser.service.ConfigurationsService;
-import cb.dynamodb.browser.service.DynamodbService;
-import cb.dynamodb.browser.service.InsertService;
 import cb.dynamodb.browser.service.SearchService;
+import cb.dynamodb.browser.service.TransactionalService;
+import com.amazonaws.services.dynamodbv2.document.DeleteItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.PutItemOutcome;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.util.StringUtils;
@@ -34,13 +35,13 @@ public class HomeController {
     private SearchService searchService;
 
     @Autowired
-    private DynamodbService dynamodbService;
+    private AwsService awsService;
 
     @Autowired
     private ConfigurationsService configurationsService;
 
     @Autowired
-    private InsertService insertService;
+    private TransactionalService transactionService;
 
 
     @GetMapping("tables")
@@ -94,12 +95,12 @@ public class HomeController {
 
     @RequestMapping("regions")
     public List<String> getRegions() {
-        return dynamodbService.getRegions();
+        return awsService.getRegions();
     }
 
     @RequestMapping("awsProfiles")
     public Set<String> getAwsProfile() {
-        return dynamodbService.getProfilesInCredentials();
+        return awsService.getProfilesInCredentials();
     }
 
     @PostMapping("settings")
@@ -125,6 +126,11 @@ public class HomeController {
 
     @PostMapping("data")
     public PutItemOutcome createItem(@RequestBody ItemDto itemDto) {
-        return insertService.insert(itemDto);
+        return transactionService.insert(itemDto);
+    }
+
+    @DeleteMapping("data")
+    public DeleteItemOutcome deleteItem(@RequestBody ItemDto itemDto) {
+        return transactionService.delete(itemDto);
     }
 }

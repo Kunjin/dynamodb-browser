@@ -22,6 +22,7 @@ public class ItemDto {
     private AttributeDto rangeKey;
 
     @JsonProperty("attributes")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<AttributeDto> attributeDtoList;
 
     public String getTable() {
