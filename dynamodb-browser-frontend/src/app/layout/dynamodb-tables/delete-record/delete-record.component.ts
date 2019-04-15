@@ -47,14 +47,6 @@ export class DeleteRecordDialog implements OnInit {
     }
 
 
-    showSuccessToast() {
-        let message = 'Connection successfully saved.';
-        this.toastr.successToastr('', message, {
-            position: 'bottom-full-width',
-            animate: 'slideFromBottom'
-        });
-    }
-
     deleteRecord(): void {
         this.transactionsService.deleteRecord(this.item).subscribe(success => {
             this.showResultToast(true);

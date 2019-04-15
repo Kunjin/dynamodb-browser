@@ -216,20 +216,10 @@ export class DynamodbTablesComponent implements OnInit {
             'attribute_value': _.get(element, this.keySchema['range_key']['attribute']),
         }
 
-
-        let itemExclusiveKeys = {
-            'hashKeyName': this.keySchema['hash_key']['attribute'],
-            'hashKeyValue': _.get(element, this.keySchema['hash_key']['attribute']),
-            'rangeKeyName': this.keySchema['range_key']['attribute'],
-            'rangeKeyValue': _.get(element, this.keySchema['range_key']['attribute'])
-        }
-
-        console.log('itemExclusiveKeys: ', itemExclusiveKeys);
         const dialogRef = this.dialog.open(EditRecordDialog, {
             width: '1000px',
             height: '500px'
         });
-
 
         // get attribute_value of indexed keys columns
         for (let i = 0; i < this.keySchema['attributes'].length; i++) {
@@ -247,6 +237,7 @@ export class DynamodbTablesComponent implements OnInit {
                 key !== this.keySchema['range_key']['attribute']) {
                 _.set(attribute, 'attribute_name', key);
                 _.set(attribute, 'attribute_value', _.get(element, key));
+                _.set(attribute, 'data_type', 'string');
 
                 this.keySchema['attributes'].push(attribute);
             }
@@ -256,6 +247,7 @@ export class DynamodbTablesComponent implements OnInit {
         _.set(item, 'hash_key', hash_key);
         _.set(item, 'range_key', range_key);
         _.set(item, 'attributes', this.keySchema['attributes']);
+        _.set(item, 'table_name', this.tableParam);
 
 
         dialogRef.componentInstance.selectedItem = item;

@@ -13,7 +13,6 @@ import _ from 'lodash';
 
 export class EditRecordDialog implements OnInit {
 
-    table: string;
     itemForm: FormGroup;
     selectedItem: {};
     hash_key: FormGroup;
@@ -39,24 +38,14 @@ export class EditRecordDialog implements OnInit {
             attribute_value: new FormControl(this.selectedItem['range_key']['attribute_value'])
         });
 
-
-        let formArrays = this.fb.array([]);
-        for (let i = 0; i < this.selectedItem['attributes'].length; i++) {
-           let group = new FormGroup({
-                attribute_name: new FormControl(this.selectedItem['attributes'][i].attribute_name),
-                data_type: new FormControl(this.selectedItem['attributes'][i].data_type || 'string'),
-                attribute_value: new FormControl(this.selectedItem['attributes'][i].attribute_value)
-            });
-            formArrays.push(group);
-        }
-
+        let formArrays = this.selectedItem['attributes'].map(attribute => this.fb.group(attribute));
         this.itemForm = this.fb.group({
-            table_name: this.table,
+            table_name: this.selectedItem['table_name'],
             hash_key: this.hash_key,
             range_key: this.range_key,
 
             // attributes: this.fb.array([this.fb.group(this.selectedItem['attributes'])])
-            attributes: new FormArray([ formArrays ])
+            attributes: this.fb.array(formArrays)
         })
     }
 
@@ -72,7 +61,7 @@ export class EditRecordDialog implements OnInit {
         this.attributes.removeAt(index);
     }
 
-    save() {
+    update() {
         this.transactionsService.saveRecord(this.itemForm.value).subscribe(result => {
             console.log('result on saving ', result);
             this.showResultToast(true);

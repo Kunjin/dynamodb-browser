@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { RECORDS_URL, TABLES_URL, OPERATIONS_URL, TABLE_DETAILS_URL, DATA_URL, SETTINGS_URL } from '../constants';
+import { RECORDS_URL, TABLES_URL, OPERATIONS_URL, TABLE_DETAILS_URL, DATA_URL } from '../constants';
 import _ from 'lodash';
 
 @Injectable()
@@ -74,19 +74,5 @@ export class TransactionService {
         return this.http.put<any>(`${DATA_URL}`, {
             item
         },  { headers: headers });
-    }
-
-    editRecord(table: string, exclusiveKeys ?: object): Observable<any> {
-        let hashKeyName = _.get(exclusiveKeys, 'hashKeyName');
-        let hashKeyValue = _.get(exclusiveKeys, 'hashKeyValue');
-        let rangeKeyName = _.get(exclusiveKeys, 'rangeKeyName');
-        let rangeKeyValue = _.get(exclusiveKeys, 'rangeKeyValue');
-
-        if (exclusiveKeys !== undefined) {
-            return this.http.get(`${DATA_URL}?table=${table}&hashKeyName=${hashKeyName}&hashKeyValue=${hashKeyValue}&rangeKeyName=${rangeKeyName}&rangeKeyValue=${rangeKeyValue}`);
-        }
-
-        return this.http.get(`${RECORDS_URL}/${table}`);
-
     }
 }
