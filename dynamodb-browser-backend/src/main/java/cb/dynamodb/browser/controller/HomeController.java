@@ -41,7 +41,6 @@ public class HomeController {
     @Autowired
     private TransactionalService transactionService;
 
-
     @GetMapping("tables")
     public List<String> listTables() {
         return searchService.getTableNames();

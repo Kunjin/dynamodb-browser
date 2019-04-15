@@ -9,13 +9,11 @@
                 Hash Key:
                 <mat-form-field appearance="outline">
                     <mat-label>Attribute Name</mat-label>
-                    <input matInput placeholder="Attribute Name" formControlName="attribute_name" readonly
-                           value="{{keySchema['hash_key']['attribute']}}">
+                    <input matInput placeholder="Attribute Name" formControlName="attribute_name" readonly>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Data Type</mat-label>
-                    <input matInput placeholder="Attribute Name" formControlName="data_type" readonly
-                           value="{{keySchema['hash_key']['data_type']}}">
+                    <input matInput placeholder="Attribute Name" formControlName="data_type" readonly>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Attribute Value</mat-label>
@@ -24,18 +22,16 @@
             </div>
         </div>
 
-        <div formGroupName="range_key" *ngIf="keySchema['range_key']['attribute'] !== undefined">
+        <div formGroupName="range_key" *ngIf="selectedItem['range_key']['attribute_name'] !== undefined">
             <div>
                 Range Key:
                 <mat-form-field appearance="outline">
                     <mat-label>Attribute Name</mat-label>
-                    <input matInput placeholder="Attribute Name" formControlName="attribute_name" readonly
-                           value="{{keySchema['range_key']['attribute']}}">
+                    <input matInput placeholder="Attribute Name" formControlName="attribute_name" readonly>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Data Type</mat-label>
-                    <input matInput placeholder="Attribute Name" formControlName="data_type" readonly
-                           value="{{keySchema['range_key']['data_type']}}">
+                    <input matInput placeholder="Attribute Name" formControlName="data_type" readonly>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Attribute Value</mat-label>

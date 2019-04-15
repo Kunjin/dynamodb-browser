@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { TransactionService } from '../../../shared/services';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { MatDialogRef } from '@angular/material';
+import _ from 'lodash';
 
 @Component({
     selector: 'edit-record-dialog',
@@ -14,7 +15,10 @@ export class EditRecordDialog implements OnInit {
 
     table: string;
     itemForm: FormGroup;
-    itemDto: {};
+    selectedItem: {};
+    hash_key: FormGroup;
+    range_key: FormGroup;
+
 
     constructor(private transactionsService: TransactionService,
                 public dialogRef: MatDialogRef<EditRecordDialog>,
@@ -24,26 +28,36 @@ export class EditRecordDialog implements OnInit {
     }
 
     ngOnInit(): void {
+        this.hash_key = this.fb.group({
+            attribute_name: new FormControl(this.selectedItem['hash_key']['attribute_name']),
+            data_type: new FormControl(this.selectedItem['hash_key']['data_type']),
+            attribute_value: new FormControl(this.selectedItem['hash_key']['attribute_value'])
+        })
+        this.range_key = this.fb.group({
+            attribute_name: new FormControl(this.selectedItem['range_key']['attribute_name']),
+            data_type: new FormControl(this.selectedItem['range_key']['data_type']),
+            attribute_value: new FormControl(this.selectedItem['range_key']['attribute_value'])
+        });
 
-        // console.log('add-record :', this.keySchema);
-        //
-        // this.hash_key = this.fb.group({
-        //     attribute_name: this.keySchema['hash_key']['attribute'],
-        //     data_type: this.keySchema['hash_key']['data_type'],
-        //     attribute_value: ''
-        // })
-        // this.range_key = this.fb.group({
-        //     attribute_name: this.keySchema['range_key']['attribute'],
-        //     data_type: this.keySchema['range_key']['data_type'],
-        //     attribute_value: ''
-        // });
-        //
-        // this.itemForm = this.fb.group({
-        //     table_name: this.table,
-        //     hash_key: this.hash_key,
-        //     range_key: this.range_key,
-        //     attributes: this.fb.array([this.fb.group({attribute_name: '', data_type: '', attribute_value: ''})])
-        // })
+
+        let formArrays = this.fb.array([]);
+        for (let i = 0; i < this.selectedItem['attributes'].length; i++) {
+           let group = new FormGroup({
+                attribute_name: new FormControl(this.selectedItem['attributes'][i].attribute_name),
+                data_type: new FormControl(this.selectedItem['attributes'][i].data_type || 'string'),
+                attribute_value: new FormControl(this.selectedItem['attributes'][i].attribute_value)
+            });
+            formArrays.push(group);
+        }
+
+        this.itemForm = this.fb.group({
+            table_name: this.table,
+            hash_key: this.hash_key,
+            range_key: this.range_key,
+
+            // attributes: this.fb.array([this.fb.group(this.selectedItem['attributes'])])
+            attributes: new FormArray([ formArrays ])
+        })
     }
 
     get attributes() {

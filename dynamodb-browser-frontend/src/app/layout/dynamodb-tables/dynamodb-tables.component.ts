@@ -51,13 +51,15 @@ export class DynamodbTablesComponent implements OnInit {
 
                 let hash_key = {};
                 let range_key = {};
+                let attributes = [];
+
 
                 //get key schema
                 this.getKeySchema(records, hash_key, range_key);
 
                 // get data type of keys
                 for (let i = 0; i < records.table.attributeDefinitions.length; i++) {
-
+                    let item = {};
                     const attributeType = records.table.attributeDefinitions[i].attributeType;
                     let dataType;
                     if (attributeType === 'S') {
@@ -70,17 +72,19 @@ export class DynamodbTablesComponent implements OnInit {
 
                     if (hash_key['attribute'] === records.table.attributeDefinitions[i].attributeName) {
                         _.set(hash_key, 'data_type', dataType);
-                    }
-
-                    if (range_key['attribute'] === records.table.attributeDefinitions[i].attributeName) {
+                    } else if (range_key['attribute'] === records.table.attributeDefinitions[i].attributeName) {
                         _.set(range_key, 'data_type', dataType);
+                    } else {
+                        _.set(item, 'data_type', dataType);
+                        _.set(item, 'attribute_name', records.table.attributeDefinitions[i].attributeName);
+                        attributes.push(item);
                     }
                 }
 
                 _.set(this.keySchema, 'hash_key', hash_key);
                 _.set(this.keySchema, 'range_key', range_key);
-                console.log(this.keySchema);
-                console.log(this.keySchema['range_key']['attribute']);
+                _.set(this.keySchema, 'attributes', attributes);
+                console.log('key schema:', this.keySchema);
             })
 
         });
@@ -212,6 +216,7 @@ export class DynamodbTablesComponent implements OnInit {
             'attribute_value': _.get(element, this.keySchema['range_key']['attribute']),
         }
 
+
         let itemExclusiveKeys = {
             'hashKeyName': this.keySchema['hash_key']['attribute'],
             'hashKeyValue': _.get(element, this.keySchema['hash_key']['attribute']),
@@ -219,20 +224,42 @@ export class DynamodbTablesComponent implements OnInit {
             'rangeKeyValue': _.get(element, this.keySchema['range_key']['attribute'])
         }
 
-
-
-
-        this.transactionsService.editRecord(this.tableParam, itemExclusiveKeys).subscribe(item => {
-            const dialogRef = this.dialog.open(EditRecordDialog, {
-                width: '500px',
-                height: '200px'
-            });
-
-            console.log('item to update: ', item);
-
-            console.log(hash_key);
-            console.log(range_key);
+        console.log('itemExclusiveKeys: ', itemExclusiveKeys);
+        const dialogRef = this.dialog.open(EditRecordDialog, {
+            width: '1000px',
+            height: '500px'
         });
+
+
+        // get attribute_value of indexed keys columns
+        for (let i = 0; i < this.keySchema['attributes'].length; i++) {
+            _.find(this.keySchema['attributes'][i],
+                _.set(this.keySchema['attributes'][i], 'attribute_value',
+                    _.get(element, this.keySchema['attributes'][i].attribute_name)));
+        }
+
+        // get other non-key columns
+        for (let key in element) {
+            let attribute = {};
+            let findAtt = { 'attribute_name': key };
+            if (!_.find(this.keySchema['attributes'], findAtt) &&
+                key !== this.keySchema['hash_key']['attribute'] &&
+                key !== this.keySchema['range_key']['attribute']) {
+                _.set(attribute, 'attribute_name', key);
+                _.set(attribute, 'attribute_value', _.get(element, key));
+
+                this.keySchema['attributes'].push(attribute);
+            }
+        }
+
+        let item = {};
+        _.set(item, 'hash_key', hash_key);
+        _.set(item, 'range_key', range_key);
+        _.set(item, 'attributes', this.keySchema['attributes']);
+
+
+        dialogRef.componentInstance.selectedItem = item;
+        console.log('item to update: ', item);
     }
 
 
