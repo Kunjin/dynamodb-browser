@@ -14,7 +14,7 @@
         </div>
 
         <div class="col-4">
-            <button mat-stroked-button *ngIf="dataSource.data.length > 0" (click)="exportCsv()">Export CSV</button>
+            <button mat-stroked-button *ngIf="dataSource.data.length > 0" (click)="exportCsv()">Export</button>
         </div>
     </div>
     <div *ngIf="selectedOption === 'query'">
@@ -86,7 +86,7 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="columnDefs"></tr>
-            <tr mat-row *matRowDef="let row; let even = even; columns: columnDefs;" [ngClass]="{gray: even}"></tr>
+            <tr mat-row *matRowDef="let row; let even = even; columns: columnDefs;" [ngClass]="{blue: even}"></tr>
         </table>
     </div>
 

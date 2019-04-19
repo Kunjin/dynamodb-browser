@@ -195,6 +195,10 @@ export class DynamodbTablesComponent implements OnInit {
 
             dialogRef.afterClosed().subscribe(item => {
                 console.log('item: ', item);
+                console.log('datatable: ', this.dataSource);
+                _.remove(this.dataSource.data, function (n) { return n['hash_key']['attribute_name'] === n['hash_key']['attribute_value']; });
+                this.addDataInDataTable(this.dataSource.data);
+                //_.remove(this.dataSource.data, _.find(this.dataSource.data, hash_key['attribute_name']));
             });
         });
 

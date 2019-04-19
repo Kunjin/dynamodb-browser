@@ -50,7 +50,7 @@ export class DeleteRecordDialog implements OnInit {
     deleteRecord(): void {
         this.transactionsService.deleteRecord(this.item).subscribe(success => {
             this.showResultToast(true);
-            this.dialogRef.close();
+            this.dialogRef.close(this.item);
         }, err => {
             this.showResultToast(false);
         })
@@ -75,6 +75,6 @@ export class DeleteRecordDialog implements OnInit {
     }
 
     cancel(): void {
-        this.dialogRef.close();
+        this.dialogRef.close(this.item);
     }
 }

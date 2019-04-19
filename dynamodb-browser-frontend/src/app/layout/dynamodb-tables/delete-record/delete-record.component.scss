@@ -10,13 +10,8 @@ th, td {
   white-space: nowrap;
 }
 
-.rounded-btn {
-  -webkit-border-radius: 50px;
-  border-radius: 50px;
-  color: rgba(255, 255, 255, 0.8);
-  background: #80CDD3;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  font-size: 18px;
-  line-height: 40px;
-  padding: 0 25px;
+.mat-stroked-button {
+  line-height: 55px !important;
+  background: #114b66;
+  color: #ffffff;
 }

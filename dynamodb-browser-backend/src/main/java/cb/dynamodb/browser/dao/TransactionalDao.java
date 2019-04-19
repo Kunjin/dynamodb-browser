@@ -39,7 +39,7 @@ public class TransactionalDao {
     public DeleteItemOutcome delete(ItemDto itemDto) {
         Table table = getTable(itemDto.getTable());
 
-        if (itemDto.getRangeKey() != null) {
+        if (itemDto.getRangeKey().getAttributeName() != null) {
             DeleteItemOutcome deleteItemOutcome = table.deleteItem(itemDto.getHashKey().getAttributeName(), itemDto.getHashKey().getValue(),
                     itemDto.getRangeKey().getAttributeName(), itemDto.getRangeKey().getValue());
 

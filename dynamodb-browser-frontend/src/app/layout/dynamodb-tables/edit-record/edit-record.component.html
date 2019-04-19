@@ -61,10 +61,10 @@
                         <mat-label>Attribute Value</mat-label>
                         <input matInput placeholder="Value" formControlName="attribute_value">
                     </mat-form-field>
-                    <button type="button" (click)="deleteAttribute(attributeIndex)">Delete Attribute</button>
+                    <button mat-stroked-button (click)="deleteAttribute(attributeIndex)">Delete</button>
                 </div>
             </div>
-            <button type="button" (click)="addAttribute()">Add Attribute</button>
+            <button mat-stroked-button (click)="addAttribute()">Add Attribute</button>
         </div>
 
         <button mat-stroked-button (click)="update()">Update</button>
