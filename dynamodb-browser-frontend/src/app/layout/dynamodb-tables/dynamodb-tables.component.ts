@@ -121,7 +121,7 @@ export class DynamodbTablesComponent implements OnInit {
                 for (let i = 0; i < result.length; i++) {
                     recordsArr.push(JSON.parse(result[i]));
                 }
-                this.addDataInDataTable(recordsArr);
+                this.initializeDataTable(recordsArr);
 
             })
         } else {
@@ -143,7 +143,7 @@ export class DynamodbTablesComponent implements OnInit {
                 for (let i = 0; i < result.length; i++) {
                     recordsArr.push(JSON.parse(result[i]));
                 }
-                this.addDataInDataTable(recordsArr);
+                this.initializeDataTable(recordsArr);
             })
         }
     }
@@ -194,11 +194,16 @@ export class DynamodbTablesComponent implements OnInit {
             dialogRef.componentInstance.currentRecord = element;
 
             dialogRef.afterClosed().subscribe(item => {
-                console.log('item: ', item);
-                console.log('datatable: ', this.dataSource);
-                _.remove(this.dataSource.data, function (n) { return n['hash_key']['attribute_name'] === n['hash_key']['attribute_value']; });
-                this.addDataInDataTable(this.dataSource.data);
-                //_.remove(this.dataSource.data, _.find(this.dataSource.data, hash_key['attribute_name']));
+                let hk_property = _.get(item, ['hash_key', 'attribute_name']);
+                let hk_value = _.get(item, ['hash_key', 'attribute_value']);
+                let rk_property = _.get(item, ['range_key', 'attribute_name']);
+                let rk_value = _.get(item, ['range_key', 'attribute_value']);
+                if (rk_property) {
+                   _.remove(this.dataSource.data, { [hk_property] : hk_value, [rk_property]: rk_value });
+                 } else {
+                    _.remove(this.dataSource.data, { [hk_property] : hk_value });
+                 }
+                this.initializeDataTable(this.dataSource.data);
             });
         });
 
@@ -284,7 +289,7 @@ export class DynamodbTablesComponent implements OnInit {
                 for (let i = 0; i < records.length; i++) {
                     recordsArr.push(JSON.parse(records[i]));
                 }
-                this.addDataInDataTable(recordsArr);
+                this.initializeDataTable(recordsArr);
             }
         })
     }
@@ -295,8 +300,8 @@ export class DynamodbTablesComponent implements OnInit {
         this.hasRecords = true;
     }
 
-    private addDataInDataTable(arr: any[]) {
-        this.hasRecords = true;
+    private initializeDataTable(arr: any[]) {
+        this.hasRecords = arr.length > 0 ? true : false;
         this.dataSource = new MatTableDataSource(arr);
         this.dataSource.connect().subscribe(d => this.renderedData = d);
     }

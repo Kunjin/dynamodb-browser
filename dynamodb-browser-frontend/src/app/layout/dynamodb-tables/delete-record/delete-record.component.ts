@@ -75,6 +75,6 @@ export class DeleteRecordDialog implements OnInit {
     }
 
     cancel(): void {
-        this.dialogRef.close(this.item);
+        this.dialogRef.close();
     }
 }
