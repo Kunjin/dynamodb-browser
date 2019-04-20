@@ -261,6 +261,35 @@ export class DynamodbTablesComponent implements OnInit {
 
         dialogRef.componentInstance.selectedItem = item;
         console.log('item to update: ', item);
+
+        dialogRef.afterClosed().subscribe(item => {
+            console.log('update: ', item);
+            let hk_property = _.get(item, ['hash_key', 'attribute_name']);
+            let hk_value = _.get(item, ['hash_key', 'attribute_value']);
+            let rk_property = _.get(item, ['range_key', 'attribute_name']);
+            let rk_value = _.get(item, ['range_key', 'attribute_value']);
+
+            let newAttributes = {};
+            _.set(newAttributes, hk_property, hk_value);
+            let attributes = _.get(item, 'attributes');
+            for (let i= 0; i < attributes.length; i++) {
+                _.set(newAttributes, _.get(attributes, [i, 'attribute_name']), _.get(attributes, [i, 'attribute_value']));
+            }
+
+            let index;
+            if (rk_property) {
+                _.set(newAttributes, rk_property, rk_value);
+                index = _.findIndex(this.dataSource.data, { [hk_property] : hk_value, [rk_property]: rk_value });
+                _.remove(this.dataSource.data, { [hk_property] : hk_value, [rk_property]: rk_value });
+            //    this.dataSource.data.push(newAttributes);
+            } else {
+                index = _.findIndex(this.dataSource.data, { [hk_property] : hk_value });
+                _.remove(this.dataSource.data, { [hk_property] : hk_value });
+             //   this.dataSource.data.push(newAttributes);
+            }
+            this.dataSource.data.splice(index, 0, newAttributes);
+            this.initializeDataTable(this.dataSource.data);
+        });
     }
 
 

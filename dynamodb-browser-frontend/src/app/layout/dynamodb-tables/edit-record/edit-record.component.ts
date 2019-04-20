@@ -65,7 +65,7 @@ export class EditRecordDialog implements OnInit {
         this.transactionsService.saveRecord(this.itemForm.value).subscribe(result => {
             console.log('result on saving ', result);
             this.showResultToast(true);
-            this.dialogRef.close();
+            this.dialogRef.close(this.itemForm.value);
         }, err => {
             this.showResultToast(false);
         })
