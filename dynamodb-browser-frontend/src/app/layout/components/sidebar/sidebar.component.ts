@@ -56,23 +56,19 @@ export class SidebarComponent implements OnInit {
             tables => {
                 this.tables = tables;
                 console.log('tables: ', this.tables);
+                this.showMenu = 'pages';
             }, err => {
                 this.showFailedToast(_.get(err, 'error.message'));
             });
     }
 
-    addExpandClass(element: any) {
-        if (element === this.showMenu) {
-            this.showMenu = '0';
-        } else {
-            this.showMenu = element;
-        }
-    }
-
-    toggleCollapsed() {
-        this.collapsed = !this.collapsed;
-        this.collapsedEvent.emit(this.collapsed);
-    }
+    // addExpandClass(element: any) {
+    //     if (element === this.showMenu) {
+    //         this.showMenu = '0';
+    //     } else {
+    //         this.showMenu = element;
+    //     }
+    // }
 
     isToggled(): boolean {
         const dom: Element = document.querySelector('body');

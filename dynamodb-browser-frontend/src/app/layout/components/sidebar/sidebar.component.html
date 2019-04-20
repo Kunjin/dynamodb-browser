@@ -2,18 +2,21 @@
     <div class="list-group">
         <a routerLink="/connection" [routerLinkActive]="['router-link-active']" class="list-group-item">
             <i class="fa fa-fw fa-dashboard"></i>&nbsp;
-            <span>{{ 'Connect' | translate }}</span>
+            <span>{{ 'Connect' }}</span>
         </a>
         <div class="nested-menu" *ngIf="tables.length > 1">
-            <a class="list-group-item" (click)="addExpandClass('pages')">
-                <i class="fa fa-plus"></i>&nbsp;
+            <!-- <i class="fa fa-plus"></i>&nbsp; -->
+            <a  class="list-group-item not-clickable">
+                <i class="fa fa-fw fa-table"></i>&nbsp;
                 <span> Tables</span>
             </a>
+
             <li class="nested" [class.expand]="showMenu === 'pages'">
 
                 <ul class="submenu" *ngFor="let table of tables">
                     <li>
-                        <a routerLink="/dynamodb-tables/{{table}}" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                        <a routerLink="/dynamodb-tables/{{table}}" [routerLinkActive]="['router-link-active']"
+                           class="list-group-item">
                             <i class="fa fa-monument"></i>&nbsp;
                             <span>{{table}}</span>
                         </a>

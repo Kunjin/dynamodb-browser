@@ -1,6 +1,6 @@
 <div [@routerTransition]>
     <div class="row mt-2">
-        <div class="col-4">
+        <div class="ml-3">
             <mat-form-field appearance="outline">
                 <mat-select placeholder="option" [(value)]="selectedOption" (selectionChange)="changeOption()"
                             disableOptionCentering>
@@ -9,13 +9,11 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="col-4">
-            <button mat-stroked-button (click)="createItemDialog()">Add Item</button>
+        <div class="ml-auto">
+            <button mat-stroked-button class="mr-2" (click)="createItemDialog()">Add Item</button>
+            <button mat-stroked-button class="mr-3" *ngIf="dataSource.data.length > 0" (click)="exportCsv()">Export</button>
         </div>
 
-        <div class="col-4">
-            <button mat-stroked-button *ngIf="dataSource.data.length > 0" (click)="exportCsv()">Export</button>
-        </div>
     </div>
     <div *ngIf="selectedOption === 'query'">
         <div class="row mt-3">
