@@ -62,14 +62,14 @@ export class DeleteRecordDialog implements OnInit {
         if (isSuccess === true) {
             message = 'Successfully deleted record.';
             this.toastr.successToastr('', message, {
-                position: 'bottom-full-width',
-                animate: 'slideFromBottom'
+                position: 'bottom-right',
+                animate: 'fade'
             });
         } else {
             message = 'Failed to delete record';
             this.toastr.errorToastr('', message, {
-                position: 'bottom-full-width',
-                animate: 'slideFromBottom'
+                position: 'bottom-right',
+                animate: 'fade',
             });
         }
     }

@@ -9,3 +9,12 @@ th, td {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.toast-blue {
+  background-color: #3BB9FF;
+}
+#toast-container > .toast-success {
+  background-image: none;
+  background-color: #3BB9FF;
+  color: black;
+}

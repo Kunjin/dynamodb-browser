@@ -33,6 +33,7 @@ export class DynamodbTablesComponent implements OnInit {
     exclusiveKeys = {};
     hasRecords = true;
     renderedData: any;
+    selectedRow;
 
     constructor(private transactionsService: TransactionService,
                 private activatedRoute: ActivatedRoute,
@@ -172,26 +173,20 @@ export class DynamodbTablesComponent implements OnInit {
         dialogRef.componentInstance.keySchema = this.keySchema;
 
         dialogRef.afterClosed().subscribe(item => {
-            let hk_property = _.get(item, ['hash_key', 'attribute_name']);
-            let hk_value = _.get(item, ['hash_key', 'attribute_value']);
-            let rk_property = _.get(item, ['range_key', 'attribute_name']);
-            let rk_value = _.get(item, ['range_key', 'attribute_value']);
+            if (item) {
+                let itemDto = this.buildItem(item);
 
-            let newAttributes = {};
-            _.set(newAttributes, hk_property, hk_value);
-            let attributes = _.get(item, 'attributes');
-            for (let i= 0; i < attributes.length; i++) {
-                _.set(newAttributes, _.get(attributes, [i, 'attribute_name']), _.get(attributes, [i, 'attribute_value']));
+                if (_.get(itemDto, 'rk_property')) {
+                    _.set(_.get(itemDto, 'newAttributes'),
+                        _.get(itemDto, 'rk_property'), _.get(itemDto, 'rk_value'));
+                }
+
+                this.dataSource.data.push(_.get(itemDto, 'newAttributes'));
+                this.initializeDataTable(this.dataSource.data);
             }
-
-            if (rk_property) {
-                _.set(newAttributes, rk_property, rk_value);
-            }
-
-            this.dataSource.data.push(newAttributes);
-            this.initializeDataTable(this.dataSource.data);
         });
     }
+
 
     deleteRecordDialog(element): void {
         this.transactionsService.getTableDetails(this.tableParam).subscribe(records => {
@@ -211,14 +206,12 @@ export class DynamodbTablesComponent implements OnInit {
             dialogRef.componentInstance.currentRecord = element;
 
             dialogRef.afterClosed().subscribe(item => {
-                let hk_property = _.get(item, ['hash_key', 'attribute_name']);
-                let hk_value = _.get(item, ['hash_key', 'attribute_value']);
-                let rk_property = _.get(item, ['range_key', 'attribute_name']);
-                let rk_value = _.get(item, ['range_key', 'attribute_value']);
-                if (rk_property) {
-                   _.remove(this.dataSource.data, { [hk_property] : hk_value, [rk_property]: rk_value });
+                let itemDto = this.buildItem(item);
+                if (_.get(itemDto, 'rk_property')) {
+                   _.remove(this.dataSource.data, { [_.get(itemDto, 'hk_property')] : _.get(itemDto, 'hk_value'),
+                       [_.get(itemDto, 'rk_property')]: _.get(itemDto, 'rk_value') });
                  } else {
-                    _.remove(this.dataSource.data, { [hk_property] : hk_value });
+                    _.remove(this.dataSource.data, { [_.get(itemDto, 'hk_property')] : _.get(itemDto, 'hk_value') });
                  }
                 this.initializeDataTable(this.dataSource.data);
             });
@@ -280,31 +273,63 @@ export class DynamodbTablesComponent implements OnInit {
         console.log('item to update: ', item);
 
         dialogRef.afterClosed().subscribe(item => {
-            console.log('update: ', item);
-            let hk_property = _.get(item, ['hash_key', 'attribute_name']);
-            let hk_value = _.get(item, ['hash_key', 'attribute_value']);
-            let rk_property = _.get(item, ['range_key', 'attribute_name']);
-            let rk_value = _.get(item, ['range_key', 'attribute_value']);
+           if (item) {
+               let itemDto = this.buildItem(item);
+               let index;
 
-            let newAttributes = {};
-            _.set(newAttributes, hk_property, hk_value);
-            let attributes = _.get(item, 'attributes');
-            for (let i= 0; i < attributes.length; i++) {
+               if (_.get(itemDto, 'rk_property')) {
+                   _.set(_.get(itemDto, 'newAttributes'),
+                       _.get(itemDto, 'rk_property'),
+                       _.get(itemDto, 'rk_value'));
+                   index = _.findIndex(this.dataSource.data, {
+                       [_.get(itemDto, 'hk_property')]:
+                           _.get(itemDto, 'hk_value'), [_.get(itemDto, 'rk_property')]:
+                           _.get(itemDto, 'rk_value')
+                   });
+                   _.remove(this.dataSource.data, {
+                       [_.get(itemDto, 'hk_property')]:
+                           _.get(itemDto, 'hk_value'), [_.get(itemDto, 'rk_property')]: _.get(itemDto, 'rk_value')
+                   });
+               } else {
+                   index = _.findIndex(this.dataSource.data, {[_.get(itemDto, 'hk_property')]: _.get(itemDto, 'hk_value')});
+                   _.remove(this.dataSource.data, {[_.get(itemDto, 'hk_property')]: _.get(itemDto, 'hk_value')});
+               }
+               this.dataSource.data.splice(index, 0, _.get(itemDto, 'newAttributes'));
+               this.initializeDataTable(this.dataSource.data);
+           }
+        });
+    }
+
+    private buildItem(item) {
+        let itemDto = {};
+        let hk_property = _.get(item, ['hash_key', 'attribute_name']);
+        let hk_value = _.get(item, ['hash_key', 'attribute_value']);
+        let rk_property = _.get(item, ['range_key', 'attribute_name']);
+        let rk_value = _.get(item, ['range_key', 'attribute_value']);
+
+        let newAttributes = {};
+
+        _.set(newAttributes, hk_property, hk_value);
+
+        if (rk_property) {
+            _.set(newAttributes, rk_property, rk_value);
+            _.set(itemDto, 'rk_property', rk_property);
+            _.set(itemDto, 'rk_value', rk_value);
+        }
+
+        let attributes = _.get(item, 'attributes');
+
+        if (attributes) {
+            for (let i = 0; i < attributes.length; i++) {
                 _.set(newAttributes, _.get(attributes, [i, 'attribute_name']), _.get(attributes, [i, 'attribute_value']));
             }
+            _.set(itemDto, 'newAttributes', newAttributes);
+        }
 
-            let index;
-            if (rk_property) {
-                _.set(newAttributes, rk_property, rk_value);
-                index = _.findIndex(this.dataSource.data, { [hk_property] : hk_value, [rk_property]: rk_value });
-                _.remove(this.dataSource.data, { [hk_property] : hk_value, [rk_property]: rk_value });
-            } else {
-                index = _.findIndex(this.dataSource.data, { [hk_property] : hk_value });
-                _.remove(this.dataSource.data, { [hk_property] : hk_value });
-            }
-            this.dataSource.data.splice(index, 0, newAttributes);
-            this.initializeDataTable(this.dataSource.data);
-        });
+        _.set(itemDto, 'hk_property', hk_property);
+        _.set(itemDto, 'hk_value', hk_value);
+
+        return itemDto;
     }
 
 

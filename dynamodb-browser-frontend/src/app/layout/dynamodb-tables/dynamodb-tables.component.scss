@@ -20,6 +20,18 @@ span {
   line-height: 80px !important;
 }
 
-.blue {
-  background-color: #dee2e6
+
+#toast-container > .toast-success {
+  background-image: none;
+  background-color: #3BB9FF;
+  color: black;
+}
+
+.selected {
+  background-color: #bacec6;
+}
+
+.header-row {
+  font-weight: bolder;
+  color: #000000;
 }

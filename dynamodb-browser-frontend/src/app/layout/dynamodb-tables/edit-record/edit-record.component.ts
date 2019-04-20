@@ -77,14 +77,14 @@ export class EditRecordDialog implements OnInit {
         if (isSuccess === true) {
             message = 'Record successfully saved.';
             this.toastr.successToastr('', message, {
-                position: 'bottom-full-width',
-                animate: 'slideFromBottom'
+                position: 'bottom-right',
+                animate: 'fade'
             });
         } else {
             message = 'Failed to saved record';
             this.toastr.errorToastr('', message, {
-                position: 'bottom-full-width',
-                animate: 'slideFromBottom'
+                position: 'bottom-right',
+                animate: 'fade'
             });
         }
     }
