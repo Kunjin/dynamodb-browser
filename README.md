@@ -1,6 +1,6 @@
-# Dynamodb Browser 
+# DynamoDB Browser 
 
-### Webapp for browsing DynamoDb
+### Web-based application for browsing DynamoDB
 
 ##### Build instructions
 ```
