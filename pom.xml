@@ -7,7 +7,7 @@
     <groupId>cb.dynamodb.browser</groupId>
     <artifactId>dynamodb-browser</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.0.0</version>
 
 
     <parent>
