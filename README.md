@@ -43,3 +43,5 @@ go to localhost:9000
      - [ ] Add Table
      - [ ] Edit Table
      - [ ] Delete Table
+
+![demo](dynamodb-browser-frontend/src/assets/images/dynamodb-browser-demo.gif)
