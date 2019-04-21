@@ -1,9 +1,6 @@
 <div mat-dialog-content>
     <form [formGroup]="itemForm">
 
-        <!--<mat-form-field>-->
-        <!--<input matInput placeholder="table" formControlName="table_name" readonly [disabled]>-->
-        <!--</mat-form-field>-->
         <div formGroupName="hash_key">
             <div>
                 Hash Key:
@@ -61,12 +58,13 @@
                         <mat-label>Attribute Value</mat-label>
                         <input matInput placeholder="Value" formControlName="attribute_value">
                     </mat-form-field>
-                    <button mat-stroked-button (click)="deleteAttribute(attributeIndex)">Delete</button>
+                    <button class="attributes-btn ml-3" type="button" (click)="deleteAttribute(attributeIndex)">Delete</button>
                 </div>
             </div>
-            <button mat-stroked-button (click)="addAttribute()">Add Attribute</button>
+            <button class="attributes-btn" type="button" (click)="addAttribute()">Add Attribute</button>
         </div>
-
-        <button mat-stroked-button (click)="update()">Update</button>
+        <div class="text-right mr-2">
+            <button mat-stroked-button (click)="update()">Update</button>
+        </div>
     </form>
 </div>

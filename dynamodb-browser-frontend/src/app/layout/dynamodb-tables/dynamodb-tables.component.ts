@@ -3,11 +3,11 @@ import { routerTransition } from '../../router.animations';
 import { TransactionService } from '../../shared/services';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog, MatTableDataSource } from '@angular/material';
-import _ from 'lodash';
 import { AddRecordDialog } from './add-record/add-record.component';
 import { Angular5Csv } from 'angular5-csv/dist/Angular5-csv';
 import { DeleteRecordDialog } from './delete-record/delete-record.component';
 import { EditRecordDialog } from './edit-record/edit-record.component';
+import _ from 'lodash';
 
 const HASH = 'HASH';
 const RANGE = 'RANGE';
@@ -96,19 +96,15 @@ export class DynamodbTablesComponent implements OnInit {
     }
 
     search() {
-        console.log(`selected operation: ${this.selectedHashKeyOperation}`);
-        console.log(`range key value: ${this.hashKeyValue}`);
 
         //TODO: refactor this
         if (this.rangeKeyValue !== '') {
             this.transactionsService.queryByHashKeyRangeKey(
                 this.tableParam,
-                //_.get(this.keySchema, 'hash_key'['attribute']),
-                //TODO: refactor use _.get
-                this.keySchema['hash_key']['attribute'],
+                _.get(this.keySchema, ['hash_key','attribute']),
                 this.selectedHashKeyOperation,
                 this.hashKeyValue,
-                this.keySchema['range_key']['attribute'],
+                _.get(this.keySchema, ['range_key','attribute']),
                 this.selectedRangeKeyOperation,
                 this.rangeKeyValue).subscribe(result => {
 
@@ -118,7 +114,7 @@ export class DynamodbTablesComponent implements OnInit {
                 }
 
                 let recordsArr = [];
-                //TODO: For now.. Look on how to handle this better!!
+                //TODO: For now.. Look on how to handle this better
                 for (let i = 0; i < result.length; i++) {
                     recordsArr.push(JSON.parse(result[i]));
                 }
@@ -128,9 +124,7 @@ export class DynamodbTablesComponent implements OnInit {
         } else {
             this.transactionsService.queryByHashKey(
                 this.tableParam,
-                //_.get(this.keySchema, 'hash_key'['attribute']),
-                //TODO: refactor use _.get
-                this.keySchema['hash_key']['attribute'],
+                _.get(this.keySchema, ['hash_key','attribute']),
                 this.selectedHashKeyOperation,
                 this.hashKeyValue).subscribe(result => {
 
@@ -140,7 +134,7 @@ export class DynamodbTablesComponent implements OnInit {
                 }
 
                 let recordsArr = [];
-                //TODO: For now.. Look on how to handle this better!!
+                //TODO: For now.. Look on how to handle this better
                 for (let i = 0; i < result.length; i++) {
                     recordsArr.push(JSON.parse(result[i]));
                 }
@@ -165,7 +159,7 @@ export class DynamodbTablesComponent implements OnInit {
 
     createItemDialog(): void {
         const dialogRef = this.dialog.open(AddRecordDialog, {
-            width: '1000px',
+            width: '850px',
             height: '500px'
         });
 
@@ -236,7 +230,7 @@ export class DynamodbTablesComponent implements OnInit {
         }
 
         const dialogRef = this.dialog.open(EditRecordDialog, {
-            width: '1000px',
+            width: '850px',
             height: '500px'
         });
 

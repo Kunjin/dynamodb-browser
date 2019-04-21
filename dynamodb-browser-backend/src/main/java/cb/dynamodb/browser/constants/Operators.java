@@ -1,12 +1,7 @@
 package cb.dynamodb.browser.constants;
 
 public enum Operators {
-    EQUALS("="),
-    LESS_THAN("<"),
-    LESS_THAN_OR_EQUALS("<="),
-    GREATER_THAN(">"),
-    GREATER_THAN_OR_EQUALS(">="),
-    BEGINS_WITH("begins with");
+    EQUALS("=");
 
     private String operator;
 
@@ -23,6 +18,7 @@ public enum Operators {
         for (Operators operator: Operators.values()) {
             if (value.equalsIgnoreCase(operator.name())) {
                 result = operator.getOperator();
+                break;
             }
         }
         return result;

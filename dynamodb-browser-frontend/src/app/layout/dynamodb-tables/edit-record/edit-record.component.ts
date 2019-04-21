@@ -3,7 +3,6 @@ import { TransactionService } from '../../../shared/services';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { MatDialogRef } from '@angular/material';
-import _ from 'lodash';
 
 @Component({
     selector: 'edit-record-dialog',
@@ -23,7 +22,6 @@ export class EditRecordDialog implements OnInit {
                 public dialogRef: MatDialogRef<EditRecordDialog>,
                 public toastr: ToastrManager,
                 private fb: FormBuilder) {
-        console.log('edit record dialog');
     }
 
     ngOnInit(): void {
@@ -43,8 +41,6 @@ export class EditRecordDialog implements OnInit {
             table_name: this.selectedItem['table_name'],
             hash_key: this.hash_key,
             range_key: this.range_key,
-
-            // attributes: this.fb.array([this.fb.group(this.selectedItem['attributes'])])
             attributes: this.fb.array(formArrays)
         })
     }

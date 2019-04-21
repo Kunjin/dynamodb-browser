@@ -10,12 +10,18 @@ th, td {
   white-space: nowrap;
 }
 
-.mat-stroked-button {
-  line-height: 55px !important;
-  background: #114b66;
-  color: #ffffff;
+.attributes-btn {
+  line-height: 30px !important;
+  background: #5ef9c2;
+  color: #000000;
 }
 
 .toast-blue {
   background-color: #3BB9FF;
+}
+
+.mat-stroked-button {
+  line-height: 50px !important;
+  background: #114b66;
+  color: #ffffff;
 }

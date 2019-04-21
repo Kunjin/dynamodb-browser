@@ -49,7 +49,7 @@ public class SearchDao {
                 results.add(iterator.next().toJSON());
             }
         } catch (Exception e) {
-            LOGGER.error("Unable to query from table {} where {} = {} due to: ", table, hashKey, value, e);
+            LOGGER.error(String.format("Unable to query from table %s where %s %s %s due to: %s ", table, hashKey, Operators.from(operator), value, e));
         }
         return results;
     }
@@ -141,8 +141,6 @@ public class SearchDao {
                 scanResults.setExclusiveKeys(keys);
                 while (item.hasNext()) {
                     Item next = item.next();
-//                    RecordResult recordResult = new RecordResult();
-//                    recordResult.setRecord(next);
                     results.add(next.toJSON());
                 }
 
