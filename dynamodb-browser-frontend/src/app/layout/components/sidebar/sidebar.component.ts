@@ -21,16 +21,6 @@ export class SidebarComponent implements OnInit {
     constructor(public router: Router,
                 private transactionService: TransactionService,
                 public toastr: ToastrManager) {
-
-        this.router.events.subscribe(val => {
-            if (
-                val instanceof NavigationEnd &&
-                window.innerWidth <= 992 &&
-                this.isToggled()
-            ) {
-                this.toggleSidebar();
-            }
-        });
     }
 
     ngOnInit() {
@@ -60,24 +50,6 @@ export class SidebarComponent implements OnInit {
             }, err => {
                 this.showFailedToast(_.get(err, 'error.message'));
             });
-    }
-
-    // addExpandClass(element: any) {
-    //     if (element === this.showMenu) {
-    //         this.showMenu = '0';
-    //     } else {
-    //         this.showMenu = element;
-    //     }
-    // }
-
-    isToggled(): boolean {
-        const dom: Element = document.querySelector('body');
-        return dom.classList.contains(this.pushRightClass);
-    }
-
-    toggleSidebar() {
-        const dom: any = document.querySelector('body');
-        dom.classList.toggle(this.pushRightClass);
     }
 
     private showFailedToast(message: string) {
